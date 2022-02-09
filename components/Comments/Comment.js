@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import ProfilePicture from '../ProfilePicture';
 import Card from '../Card';
 
 export default function Comment({
@@ -18,17 +19,21 @@ export default function Comment({
       <Card className='mt-4'>
         {/* Votes */}
         <div>
-          <div className='bg-gray-100 p-3 rounded-md text-center font-semibold text-violet-800'>
-            <div className='cursor-pointer mb-5'>
+          <div className='bg-gray-100 py-2 px-3 rounded-md text-center font-semibold text-violet-800'>
+            <div className='cursor-pointer mb-2'>
               <Image
+                height={12}
+                width={12}
                 className='mx-auto text-blue'
                 src='/images/icon-plus.svg'
                 alt='upvote'
               />
             </div>
-            <div className='mb-5 text-blue font-medium text-sm'>{score}</div>
+            <div className='mb-1 text-blue font-medium'>{score}</div>
             <div className='cursor-pointer'>
               <Image
+                height={4}
+                width={12}
                 className='mx-auto'
                 src='/images/icon-minus.svg'
                 alt='downvote'
@@ -41,7 +46,7 @@ export default function Comment({
         <div className='flex-1 ml-6'>
           {/* Title */}
           <div className='flex mb-3 items-center'>
-            <Image className='h-7 w-7' src={userImg} alt='profile-picture' />
+            <ProfilePicture userImg={userImg} username={username} />
             <span className='ml-4 font-medium'>{username}</span>
             {isCurrentUser && (
               <div className='bg-blue px-2 ml-2 text-white rounded-md text-sm'>
@@ -56,6 +61,8 @@ export default function Comment({
               <>
                 <span className='text-softRed hover:opacity-50 cursor-pointer'>
                   <Image
+                    height={13}
+                    width={13}
                     src='/images/icon-delete.svg'
                     className='inline-block'
                     alt='delete-icon'
@@ -64,6 +71,8 @@ export default function Comment({
                 </span>
                 <span className='text-darkBlue hover:opacity-50 cursor-pointer ml-4'>
                   <Image
+                    height={13}
+                    width={13}
                     src='/images/icon-edit.svg'
                     className='inline-block'
                     alt='edit-icon'
@@ -75,6 +84,8 @@ export default function Comment({
             {!isCurrentUser && (
               <span className='text-darkBlue hover:opacity-50 cursor-pointer'>
                 <Image
+                  height={13}
+                  width={13}
                   src='/images/icon-reply.svg'
                   className='inline-block'
                   alt='reply-icon'
