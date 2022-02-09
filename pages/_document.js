@@ -1,6 +1,4 @@
-import { Html, Head } from 'next/document';
-
-import Layout from '../components/Layout';
+import { Html, Head, Main, NextScript } from 'next/document';
 
 const Document = () => {
   return (
@@ -10,7 +8,7 @@ const Document = () => {
         <link
           rel='preconnect'
           href='https://fonts.gstatic.com'
-          crossorigin
+          crossOrigin
         ></link>
         <link
           href='https://fonts.googleapis.com/css2?family=Rubik&display=swap'
@@ -18,7 +16,8 @@ const Document = () => {
         ></link>
       </Head>
       <body className='bg-gray-100'>
-        <Layout />
+        <Main />
+        <NextScript />
       </body>
     </Html>
   );

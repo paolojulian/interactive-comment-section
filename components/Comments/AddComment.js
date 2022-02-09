@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 import { useUserContext } from '../../context/UserContext';
 import Button from '../Button';
 import Card from '../Card';
@@ -8,7 +10,7 @@ export default function AddComment({ sendText = 'send' }) {
   return (
     <Card className='w-full flex mt-4'>
       <div>
-        <img className='h-7 w-7' src={userContext.user.image.webp} />
+        <Image className='h-7 w-7' src={userContext.user.image.webp} alt='profile-picture' />
       </div>
       <div className='flex-1 mx-4 h-24'>
         <textarea

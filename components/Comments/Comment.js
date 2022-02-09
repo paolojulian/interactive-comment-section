@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Card from '../Card';
 
 export default function Comment({
@@ -19,11 +20,19 @@ export default function Comment({
         <div>
           <div className='bg-gray-100 p-3 rounded-md text-center font-semibold text-violet-800'>
             <div className='cursor-pointer mb-5'>
-              <img className='mx-auto text-blue' src='/images/icon-plus.svg' />
+              <Image
+                className='mx-auto text-blue'
+                src='/images/icon-plus.svg'
+                alt='upvote'
+              />
             </div>
             <div className='mb-5 text-blue font-medium text-sm'>{score}</div>
             <div className='cursor-pointer'>
-              <img className='mx-auto' src='/images/icon-minus.svg' />
+              <Image
+                className='mx-auto'
+                src='/images/icon-minus.svg'
+                alt='downvote'
+              />
             </div>
           </div>
         </div>
@@ -32,7 +41,7 @@ export default function Comment({
         <div className='flex-1 ml-6'>
           {/* Title */}
           <div className='flex mb-3 items-center'>
-            <img className='h-7 w-7' src={userImg} />
+            <Image className='h-7 w-7' src={userImg} alt='profile-picture' />
             <span className='ml-4 font-medium'>{username}</span>
             {isCurrentUser && (
               <div className='bg-blue px-2 ml-2 text-white rounded-md text-sm'>
@@ -46,18 +55,30 @@ export default function Comment({
             {isCurrentUser && (
               <>
                 <span className='text-softRed hover:opacity-50 cursor-pointer'>
-                  <img src='/images/icon-delete.svg' className='inline-block' />
+                  <Image
+                    src='/images/icon-delete.svg'
+                    className='inline-block'
+                    alt='delete-icon'
+                  />
                   <span className='ml-1 font-medium'>Delete</span>
                 </span>
                 <span className='text-darkBlue hover:opacity-50 cursor-pointer ml-4'>
-                  <img src='/images/icon-edit.svg' className='inline-block' />
+                  <Image
+                    src='/images/icon-edit.svg'
+                    className='inline-block'
+                    alt='edit-icon'
+                  />
                   <span className='ml-1 font-medium'>Edit</span>
                 </span>
               </>
             )}
             {!isCurrentUser && (
               <span className='text-darkBlue hover:opacity-50 cursor-pointer'>
-                <img src='/images/icon-reply.svg' className='inline-block' />
+                <Image
+                  src='/images/icon-reply.svg'
+                  className='inline-block'
+                  alt='reply-icon'
+                />
                 <span className='ml-1 font-medium'>Reply</span>
               </span>
             )}

@@ -18,11 +18,11 @@ export default function Comments() {
     } catch (e) {
       console.log(e);
     }
-  }, [list]);
+  }, [userContext]);
 
   React.useEffect(() => {
     fetchListAsync();
-  }, []);
+  }, [fetchListAsync]);
 
   return (
     <div className='flex flex-col items-center justify-center max-w-2xl mx-auto'>
