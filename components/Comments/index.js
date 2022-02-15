@@ -9,24 +9,26 @@ export default function Comments() {
 
   const [list, setList] = React.useState([]);
 
-  const fetchListAsync = React.useCallback(async () => {
+  const fetchListAsync = async () => {
     try {
       const response = await fetch('/data.json');
       const { comments, currentUser } = await response.json();
+      console.log(comments);
       setList([...comments]);
       userContext.login(currentUser);
     } catch (e) {
       console.log(e);
     }
-  }, [userContext]);
+  };
 
   React.useEffect(() => {
     fetchListAsync();
+    console.log('test');
   }, []);
 
   return (
     <div className='flex flex-col items-center justify-center max-w-2xl mx-auto'>
-      {list.map(({ id, createdAt, content, replies, score, user }) => (
+      {list && list.map(({ id, createdAt, content, replies, score, user }) => (
         <Comment
           key={id}
           createdAt={createdAt}
@@ -35,7 +37,7 @@ export default function Comments() {
           replies={replies}
           score={score}
           username={user.username}
-          userImg={user.image.webp}
+          userImg={user.image.png}
         />
       ))}
 

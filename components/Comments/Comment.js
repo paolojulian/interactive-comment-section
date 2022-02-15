@@ -1,6 +1,14 @@
 import Image from 'next/image';
-import ProfilePicture from '../ProfilePicture';
+
 import Card from '../Card';
+import DeleteIcon from '../Icons/DeleteIcon';
+import EditIcon from '../Icons/EditIcon';
+import ProfilePicture from '../ProfilePicture';
+import ReplyIcon from '../Icons/ReplyIcon';
+import PlusIcon from '../Icons/PlusIcon';
+import MinusIcon from '../Icons/MinusIcon';
+import DeleteComment from './DeleteComment';
+import { useState } from 'react';
 
 export default function Comment({
   replies = [],
@@ -12,7 +20,12 @@ export default function Comment({
   username,
   userImg,
 }) {
+  const [showDelete, setShowDelete] = useState(false);
   const isCurrentUser = currentUser && currentUser.username === username;
+
+  const onDelete = () => {
+    setShowDelete(!showDelete);
+  };
 
   return (
     <>
@@ -21,23 +34,11 @@ export default function Comment({
         <div>
           <div className='bg-gray-100 py-2 px-3 rounded-md text-center font-semibold text-violet-800'>
             <div className='cursor-pointer mb-2'>
-              <Image
-                height={12}
-                width={12}
-                className='mx-auto text-blue'
-                src='/images/icon-plus.svg'
-                alt='upvote'
-              />
+              <PlusIcon />
             </div>
             <div className='mb-1 text-blue font-medium'>{score}</div>
             <div className='cursor-pointer'>
-              <Image
-                height={4}
-                width={12}
-                className='mx-auto'
-                src='/images/icon-minus.svg'
-                alt='downvote'
-              />
+              <MinusIcon />
             </div>
           </div>
         </div>
@@ -59,38 +60,23 @@ export default function Comment({
             {/* Actions */}
             {isCurrentUser && (
               <>
-                <span className='text-softRed hover:opacity-50 cursor-pointer'>
-                  <Image
-                    height={13}
-                    width={13}
-                    src='/images/icon-delete.svg'
-                    className='inline-block'
-                    alt='delete-icon'
-                  />
-                  <span className='ml-1 font-medium'>Delete</span>
-                </span>
-                <span className='text-darkBlue hover:opacity-50 cursor-pointer ml-4'>
-                  <Image
-                    height={13}
-                    width={13}
-                    src='/images/icon-edit.svg'
-                    className='inline-block'
-                    alt='edit-icon'
-                  />
-                  <span className='ml-1 font-medium'>Edit</span>
+                <button
+                  className='text-softRed hover:opacity-50 cursor-pointer flex items-center'
+                  onClick={onDelete}
+                >
+                  <DeleteIcon />
+                  <span className='ml-2 font-medium'>Delete</span>
+                </button>
+                <span className='text-darkBlue hover:opacity-50 cursor-pointer ml-4 flex items-center'>
+                  <EditIcon />
+                  <span className='ml-2 font-medium'>Edit</span>
                 </span>
               </>
             )}
             {!isCurrentUser && (
-              <span className='text-darkBlue hover:opacity-50 cursor-pointer'>
-                <Image
-                  height={13}
-                  width={13}
-                  src='/images/icon-reply.svg'
-                  className='inline-block'
-                  alt='reply-icon'
-                />
-                <span className='ml-1 font-medium'>Reply</span>
+              <span className='text-darkBlue hover:opacity-50 cursor-pointer flex items-center'>
+                <ReplyIcon />
+                <span className='ml-2 font-medium'>Reply</span>
               </span>
             )}
           </div>
@@ -126,6 +112,8 @@ export default function Comment({
           </div>
         </div>
       ))}
+
+      <DeleteComment isOpen={showDelete} onClose={() => setShowDelete(false)} />
     </>
   );
 }
