@@ -41,7 +41,7 @@ export default function Comments() {
         />
       ))}
 
-      <AddComment />
+      <AddComment className='mt-4 w-full'/>
     </div>
   );
 }

@@ -1,13 +1,14 @@
+import React from 'react';
 import { useUserContext } from '../../context/UserContext';
 import Button from '../Button';
 import Card from '../Card';
 import ProfilePicture from '../ProfilePicture';
 
-export default function AddComment({ sendText = 'send' }) {
+function AddComment({ sendText = 'send', ...props }, ref) {
   const userContext = useUserContext();
 
   return (
-    <Card className='w-full flex mt-4'>
+    <Card className='w-full flex' ref={ref} {...props}>
       <div>
         <ProfilePicture userImg={userContext.user.image.webp} username={userContext.user.username} />
       </div>
@@ -23,3 +24,7 @@ export default function AddComment({ sendText = 'send' }) {
     </Card>
   );
 }
+
+const forwardedAddComment = React.forwardRef(AddComment);
+
+export default forwardedAddComment;

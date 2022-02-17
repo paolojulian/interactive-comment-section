@@ -1,14 +1,14 @@
-import Image from 'next/image';
+import { useState } from 'react';
 
+import AddReply from './AddReply';
 import Card from '../Card';
+import DeleteComment from './DeleteComment';
 import DeleteIcon from '../Icons/DeleteIcon';
 import EditIcon from '../Icons/EditIcon';
+import MinusIcon from '../Icons/MinusIcon';
+import PlusIcon from '../Icons/PlusIcon';
 import ProfilePicture from '../ProfilePicture';
 import ReplyIcon from '../Icons/ReplyIcon';
-import PlusIcon from '../Icons/PlusIcon';
-import MinusIcon from '../Icons/MinusIcon';
-import DeleteComment from './DeleteComment';
-import { useState } from 'react';
 
 export default function Comment({
   replies = [],
@@ -21,15 +21,20 @@ export default function Comment({
   userImg,
 }) {
   const [showDelete, setShowDelete] = useState(false);
+  const [showAddReply, setShowAddReply] = useState(false);
   const isCurrentUser = currentUser && currentUser.username === username;
 
   const onDelete = () => {
     setShowDelete(!showDelete);
   };
 
+  const onReply = () => {
+    setShowAddReply((prev) => !prev);
+  };
+
   return (
     <>
-      <Card className='mt-4'>
+      <Card className='mt-4 z-10'>
         {/* Votes */}
         <div>
           <div className='bg-gray-100 py-2 px-3 rounded-md text-center font-semibold text-violet-800'>
@@ -74,10 +79,13 @@ export default function Comment({
               </>
             )}
             {!isCurrentUser && (
-              <span className='text-darkBlue hover:opacity-50 cursor-pointer flex items-center'>
+              <button
+                className='text-darkBlue hover:opacity-50 cursor-pointer flex items-center'
+                onClick={onReply}
+              >
                 <ReplyIcon />
                 <span className='ml-2 font-medium'>Reply</span>
-              </span>
+              </button>
             )}
           </div>
           {/* Description */}
@@ -91,6 +99,8 @@ export default function Comment({
           </div>
         </div>
       </Card>
+
+      <AddReply willShow={showAddReply}></AddReply>
 
       {replies.map(({ id, createdAt, content, replyingTo, score, user }) => (
         <div className='flex' key={id}>
