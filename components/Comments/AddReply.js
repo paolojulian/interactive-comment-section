@@ -16,10 +16,6 @@ const AddReply = ({ willShow }) => {
     transform: willShow ? 'translateY(0%)' : 'translateY(-100%)',
   });
 
-  useEffect(() => {
-    console.log(ref);
-  });
-
   return (
     <animated.div
       style={replyAnimation}
