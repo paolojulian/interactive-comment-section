@@ -43,7 +43,7 @@ export default function Comment({
 
   const onUpdate = () => {
     setShowEdit((prev) => !prev);
-  }
+  };
 
   const onDelete = () => {
     setShowDelete(!showDelete);
@@ -58,12 +58,12 @@ export default function Comment({
       <Card className='mt-4 z-10 w-full'>
         {/* Votes */}
         <div>
-          <div className='bg-gray-100 py-2 px-3 rounded-md text-center font-semibold text-violet-800'>
+          <div className='bg-gray-100 py-2 px-3 rounded-md text-center font-semibold text-violet-800 flex flex-col items-center'>
             <div className='cursor-pointer mb-2'>
               <PlusIcon />
             </div>
             <div className='mb-1 text-blue font-medium'>{score}</div>
-            <div className='cursor-pointer'>
+            <div className='cursor-pointer mt-1'>
               <MinusIcon />
             </div>
           </div>
