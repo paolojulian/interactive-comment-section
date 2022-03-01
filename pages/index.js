@@ -1,7 +1,33 @@
 import Head from 'next/head';
+import React from 'react';
+
 import Comments from '../components/Comments/index';
+import { useUserContext } from '../context/UserContext';
 
 export default function Home() {
+  const userContext = useUserContext();
+  const [list, setList] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const fetchListAsync = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch('/api/posts');
+      const { comments, currentUser } = await response.json();
+      setTimeout(() => {
+        setIsLoading(false);
+        setList([...comments]);
+        userContext.login(currentUser);
+      }, 1000);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchListAsync();
+  }, []);
+
   return (
     <div className='flex flex-col pt-10'>
       <Head>
@@ -18,7 +44,7 @@ export default function Home() {
         />
       </Head>
 
-      <Comments />
+      <Comments list={list} isLoading={isLoading} />
     </div>
   );
 }
