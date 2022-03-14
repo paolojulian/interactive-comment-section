@@ -10,7 +10,7 @@ export default function CommentLoader({ isVisible }) {
   return (
     <div className='animate-pulse w-full'>
       {Array.from(Array(4), (e, i) => (
-        <Card className='mt-4 z-10 w-full'>
+        <Card key={i} className='mt-4 z-10 w-full'>
           {/* Votes */}
           <div>
             <div className='bg-gray-100 p-2 rounded-md text-center font-semibold text-violet-800 flex flex-col items-center'>
@@ -28,25 +28,25 @@ export default function CommentLoader({ isVisible }) {
           <div className='flex-1 ml-6 w-full'>
             {/* Title */}
             <div className='flex mb-3 items-center'>
-              <div class='rounded-full bg-slate-300 h-6 w-6'></div>
-              <div class='ml-4 h-2 w-52 bg-slate-300 rounded'></div>
+              <div className='rounded-full bg-slate-300 h-6 w-6'></div>
+              <div className='ml-4 h-2 w-52 bg-slate-300 rounded'></div>
               <div className='flex-1'>
-                <div class='ml-4 h-2 w-28 bg-slate-300 rounded'></div>
+                <div className='ml-4 h-2 w-28 bg-slate-300 rounded'></div>
               </div>
             </div>
             {/* Description */}
             <div className='text-grayBlue w-full'>
               <div className='grid grid-cols-4 gap-4 mb-4'>
-                <div class='h-2 bg-slate-300 rounded col-span-2'></div>
-                <div class='h-2 bg-slate-300 rounded col-span-1'></div>
-                <div class='h-2 bg-slate-300 rounded col-span-1'></div>
+                <div className='h-2 bg-slate-300 rounded col-span-2'></div>
+                <div className='h-2 bg-slate-300 rounded col-span-1'></div>
+                <div className='h-2 bg-slate-300 rounded col-span-1'></div>
               </div>
               <div className='grid grid-cols-3 gap-4 mb-4'>
-                <div class='h-2 bg-slate-300 rounded col-span-2'></div>
-                <div class='h-2 bg-slate-300 rounded col-span-1'></div>
+                <div className='h-2 bg-slate-300 rounded col-span-2'></div>
+                <div className='h-2 bg-slate-300 rounded col-span-1'></div>
               </div>
               <div className='grid grid-cols-3 gap-4 mb-4'>
-                <div class='h-2 bg-slate-300 rounded col-span-1'></div>
+                <div className='h-2 bg-slate-300 rounded col-span-1'></div>
               </div>
             </div>
           </div>

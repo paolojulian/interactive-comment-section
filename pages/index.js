@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import Comments from '../components/Comments/index';
 import { useUserContext } from '../context/UserContext';
@@ -9,7 +9,7 @@ export default function Home() {
   const [list, setList] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const fetchListAsync = async () => {
+  const fetchListAsync = useCallback(async () => {
     try {
       setIsLoading(true);
       const response = await fetch('/api/posts');
@@ -22,11 +22,11 @@ export default function Home() {
     } catch (e) {
       console.log(e);
     }
-  };
+  }, []);
 
   React.useEffect(() => {
     fetchListAsync();
-  }, []);
+  }, [fetchListAsync]);
 
   return (
     <div className='flex flex-col pt-10'>

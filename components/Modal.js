@@ -26,7 +26,7 @@ const Modal = ({
 
   const display = useCallback(() => {
     return modalOpen ? 'fixed' : 'hidden';
-  });
+  }, [modalOpen]);
 
   const animation = useSpring({
     config: {

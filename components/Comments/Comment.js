@@ -35,7 +35,7 @@ export default function Comment({
       editRef.current.setSelectionRange(trueContentLength, trueContentLength);
       editRef.current.scrollTop = editRef.current.scrollHeight;
     }
-  }, [editRef, showEdit]);
+  }, []);
 
   const onEdit = () => {
     setShowEdit((prev) => !prev);
