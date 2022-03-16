@@ -1,27 +1,36 @@
 import { createContext, useContext, useState } from 'react';
 
 const initialData = {
-  username: 'test',
-  image: '',
+  id: null,
+  username: null,
+  image: { webp: null, png: null },
 };
 
 const UserContext = createContext({
   user: initialData,
-  login: () => {},
+  setUser: () => {},
+  loginAsync: () => {},
 });
 
 const UserProvider = ({ children }) => {
   const [user, setUser] = useState(initialData);
 
-  const login = ({ username, image }) => {
-    setUser(() => ({
-      username,
-      image
-    }));
-  }
+  const loginAsync = async () => {
+    try {
+      const response = await fetch('/api/users/current');
+      const { id, username, image } = await response.json();
+      setUser(() => ({
+        id,
+        username,
+        image,
+      }));
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
-    <UserContext.Provider value={{ user, login }}>
+    <UserContext.Provider value={{ user, setUser, loginAsync }}>
       {children}
     </UserContext.Provider>
   );

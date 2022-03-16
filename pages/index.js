@@ -1,32 +1,25 @@
 import Head from 'next/head';
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import Comments from '../components/Comments/index';
 import { useUserContext } from '../context/UserContext';
+import { domain } from '../helpers/domain';
 
-export default function Home() {
+export async function getServerSideProps() {
+  const commentsResponse = await fetch(`${domain}/api/comments`);
+  const comments = await commentsResponse.json();
+  const currentUserResponse = await fetch(`${domain}/api/users/current`);
+  const currentUser = await currentUserResponse.json();
+
+  return { props: { comments, currentUser } };
+}
+
+export default function Home({ comments, currentUser }) {
   const userContext = useUserContext();
-  const [list, setList] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-
-  const fetchListAsync = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const response = await fetch('/api/posts');
-      const { comments, currentUser } = await response.json();
-      setTimeout(() => {
-        setIsLoading(false);
-        setList([...comments]);
-        userContext.login(currentUser);
-      }, 1000);
-    } catch (e) {
-      console.log(e);
-    }
-  }, []);
 
   React.useEffect(() => {
-    fetchListAsync();
-  }, [fetchListAsync]);
+    userContext.setUser(currentUser)
+  }, []);
 
   return (
     <div className='flex flex-col pt-10'>
@@ -44,7 +37,7 @@ export default function Home() {
         />
       </Head>
 
-      <Comments list={list} isLoading={isLoading} />
+      <Comments list={comments} />
     </div>
   );
 }

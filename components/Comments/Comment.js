@@ -21,16 +21,17 @@ export default function Comment({
   score,
   username,
   userImg,
+  userID
 }) {
   const editRef = useRef(null);
   const [showAddReply, setShowAddReply] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  const isCurrentUser = currentUser && currentUser.username === username;
+  const isCurrentUser = currentUser && currentUser.id === userID;
 
   useEffect(() => {
     if (showEdit && editRef?.current) {
-      const trueContentLength = content.length + 2 + replyingTo.length;
+      const trueContentLength = content.length + 2 + replyingTo.username.length;
       editRef.current.focus();
       editRef.current.setSelectionRange(trueContentLength, trueContentLength);
       editRef.current.scrollTop = editRef.current.scrollHeight;
@@ -45,7 +46,7 @@ export default function Comment({
     setShowEdit((prev) => !prev);
   };
 
-  const onDelete = () => {
+  const onDelete = async () => {
     setShowDelete(!showDelete);
   };
 
@@ -116,7 +117,7 @@ export default function Comment({
           <div className='text-grayBlue w-full'>
             {replyingTo && !showEdit && (
               <span className='text-darkBlue font-medium mr-1'>
-                @{replyingTo}
+                @{replyingTo.username}
               </span>
             )}
             {!showEdit && content}
@@ -126,7 +127,7 @@ export default function Comment({
                 className='flex-1'
                 placeholder='Add a reply..'
                 ref={editRef}
-                value={`@${replyingTo} ${content}`}
+                value={`@${replyingTo.username} ${content}`}
                 onChange={() => console.log('test')}
               />
             )}
