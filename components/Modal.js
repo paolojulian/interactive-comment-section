@@ -37,7 +37,7 @@ const Modal = ({
   });
 
   return (
-    <animated.div style={animation}>
+    <animated.div>
       <div
         className={
           'z-10 inset-0 overflow-y-auto bg-opacity-40 bg-black ' + display()
@@ -74,7 +74,7 @@ const Modal = ({
             <div className='flex mt-4'>
               <button
                 type='button'
-                className='flex-1 bg-grayBlue text-white uppercase inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                className='flex-1 bg-grayBlue text-white uppercase inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
                 onClick={onClose}
               >
                 {no}
