@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useCommentsContext } from '../../context/CommentsContext';
 import { useUserContext } from '../../context/UserContext';
 import Button from '../Button';
 import Card from '../Card';
@@ -6,27 +7,14 @@ import ProfilePicture from '../ProfilePicture';
 
 function AddComment({ sendText = 'send', ...props }, ref) {
   const [comment, setComment] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const userContext = useUserContext();
+  const { addCommentApi } = useCommentsContext();
 
-  const onSubmit = async () => {
-    const data = { comment };
-    setIsLoading(true);
-    const fetchResponse = await fetch('/api/comments/add', {
-      method: 'POST',
-      mode: 'cors',
-      cache: 'no-cache',
-      credentials: 'same-origin',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      redirect: 'follow',
-      referrerPolicy: 'no-referrer',
-      body: JSON.stringify(data),
-    });
-
-    const response = await fetchResponse.json();
-    setIsLoading(false);
+  const onSubmit = async() => {
+    const response = await addCommentApi.request(comment);
+    if (response.ok) {
+      setComment('');
+    }
   };
 
   return (
@@ -46,7 +34,7 @@ function AddComment({ sendText = 'send', ...props }, ref) {
         ></textarea>
       </div>
       <div>
-        <Button onClick={onSubmit} isLoading={isLoading}>{sendText}</Button>
+        <Button onClick={onSubmit} isLoading={addCommentApi.isLoading}>{sendText}</Button>
       </div>
     </Card>
   );

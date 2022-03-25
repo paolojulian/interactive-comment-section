@@ -1,3 +1,4 @@
+import Timeout from "await-timeout";
 import { useState } from "react";
 
 function useApi(apiFunc) {
@@ -9,8 +10,6 @@ function useApi(apiFunc) {
     setIsLoading(true);
     const response = await apiFunc(...args);
     setIsLoading(false);
-
-    console.log(response);
 
     setIsError(!response.ok);
     setData(response.data);

@@ -3,16 +3,19 @@ import React from 'react';
 import AddComment from './AddComment';
 import Comment from './Comment';
 import { useUserContext } from '../../context/UserContext';
+import { useCommentsContext } from '../../context/CommentsContext';
 
-export default function Comments({ list }) {
+export default function Comments() {
   const userContext = useUserContext();
-
+  const { comments } = useCommentsContext();
+  
   return (
     <div className='flex flex-col items-center justify-center max-w-2xl mx-auto w-full'>
-      {list &&
-        list.map(({ id, createdAt, content, replies, score, user }) => (
+      {comments &&
+        comments.map(({ id, createdAt, content, replies, score, user }) => (
           <Comment
             key={id}
+            id={id}
             createdAt={createdAt}
             content={content}
             currentUser={userContext.user}

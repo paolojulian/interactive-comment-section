@@ -1,30 +1,49 @@
 import { createContext, useContext, useState } from 'react';
 import apiClient from '../helpers/api/client';
-
-const initialData = {
-  id: null,
-  username: null,
-  image: { webp: null, png: null },
-};
+import useApi from '../hooks/useApi';
 
 const CommentsContext = createContext({
-  user: initialData,
-  setUser: () => {},
-  loginAsync: () => {},
+  comments: [],
+  addCommentApi: {
+    data: {},
+    request: () => {},
+    isLoading: false,
+    isError: false,
+  },
+  deleteCommentApi: {
+    data: {},
+    request: () => {},
+    isLoading: false,
+    isError: false,
+  },
+  setComments: () => {},
 });
 
-const CommentsProvider = ({ children }) => {
-  const [comments, setComments] = useState([]);
+const CommentsProvider = ({ initialData, children }) => {
+  const [comments, setComments] = useState(initialData);
 
-  const addComment = async () => {
-    const data = { comment };
-    setIsLoading(true);
-    await apiClient.post('/api/comments/add', data);
-    setIsLoading(false);
-  };
+  const addCommentApi = useApi(async (comment) => {
+    const data = { comment }
+    const response = await apiClient.post('/api/comments/add', data);
+
+    if (response.ok) {
+      setComments([...comments, response.data.comment]);
+    }
+
+    return response;
+  });
+
+  const deleteCommentApi = useApi(async (id) => {
+    const response = await apiClient.delete(`/api/comments/${id}`);
+    if (response.ok) {
+      setComments([...comments.filter(comment => Number(comment.id) !== Number(id))]);
+    }
+
+    return response;
+  });
 
   return (
-    <CommentsContext.Provider value={{ comments, addComment, setComments }}>
+    <CommentsContext.Provider value={{ comments, addCommentApi, deleteCommentApi, setComments }}>
       {children}
     </CommentsContext.Provider>
   );

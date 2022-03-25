@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useSpring, animated } from 'react-spring';
+import Button from './Button';
 
 const timeoutHandler = null;
 
@@ -9,6 +10,7 @@ const Modal = ({
   no = 'no',
   yes = 'yes',
   isOpen = false,
+  isLoading = false,
   onYes = () => {},
   onClose = () => {},
 }) => {
@@ -21,7 +23,7 @@ const Modal = ({
     } else {
       timeoutHandler = setTimeout(() => {
         setModalOpen(false);
-      }, 75);
+      }, 120);
     }
   }, [isOpen]);
 
@@ -31,21 +33,21 @@ const Modal = ({
 
   const animation = useSpring({
     config: {
-      duration: 75,
+      duration: 120,
     },
     opacity: isOpen ? 1 : 0,
   });
 
   return (
-    <animated.div>
-      <div
-        className={
-          'z-10 inset-0 overflow-y-auto bg-opacity-40 bg-black ' + display()
-        }
-        aria-labelledby='modal-title'
-        role='dialog'
-        aria-modal='true'
-      >
+    <div
+      className={
+        'z-50 inset-0 overflow-y-auto bg-opacity-40 bg-black ' + display()
+      }
+      aria-labelledby='modal-title'
+      role='dialog'
+      aria-modal='true'
+    >
+      <animated.div style={animation}>
         <div className='flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
           <div className='fixed inset-0' aria-hidden='true'></div>
           <span
@@ -74,23 +76,23 @@ const Modal = ({
             <div className='flex mt-4'>
               <button
                 type='button'
-                className='flex-1 bg-grayBlue text-white uppercase inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
+                className='flex-1 bg-grayBlue text-base text-white uppercase inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500'
                 onClick={onClose}
               >
                 {no}
               </button>
-              <button
-                type='button'
-                className='flex-1 bg-softRed text-white uppercase inline-flex ml-2 justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+              <Button
+                className='flex-1 bg-softRed text-base text-white uppercase inline-flex ml-2 justify-center rounded-md border border-red-400 shadow-sm px-4 py-2 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+                isLoading={isLoading}
                 onClick={onYes}
               >
                 {yes}
-              </button>
+              </Button>
             </div>
           </div>
         </div>
-      </div>
-    </animated.div>
+      </animated.div>
+    </div>
   );
 };
 

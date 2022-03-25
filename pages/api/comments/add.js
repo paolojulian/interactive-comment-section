@@ -25,7 +25,8 @@ const handler = async (req, res) => {
   db.comments.push(comment);
 
   await saveData();
-  res.status(201).json(db.comments);
+  comment.user = db.users.find(user => Number(user.id) === Number(db.currentUser));
+  res.status(201).json({ comment });
 };
 
 async function saveData() {

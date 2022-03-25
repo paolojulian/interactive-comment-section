@@ -11,6 +11,7 @@ import ProfilePicture from '../ProfilePicture';
 import ReplyIcon from '../Icons/ReplyIcon';
 import TextArea from '../TextArea';
 import Button from '../Button';
+import { useCommentsContext } from '../../context/CommentsContext';
 
 export default function Comment({
   replies = [],
@@ -21,13 +22,15 @@ export default function Comment({
   score,
   username,
   userImg,
-  userID
+  userID,
+  id,
 }) {
   const editRef = useRef(null);
   const [showAddReply, setShowAddReply] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const isCurrentUser = currentUser && currentUser.id === userID;
+  const { deleteCommentApi } = useCommentsContext();
 
   useEffect(() => {
     if (showEdit && editRef?.current) {
@@ -50,6 +53,13 @@ export default function Comment({
     setShowDelete(!showDelete);
   };
 
+  const onDeleteComment = async () => {
+    const response = await deleteCommentApi.request(id);
+    if (response.ok) {
+      setShowDelete((prev) => !prev);
+    }
+  };
+
   const onReply = () => {
     setShowAddReply((prev) => !prev);
   };
@@ -65,7 +75,7 @@ export default function Comment({
             </div>
             <div className='mb-1 text-blue font-medium'>{score}</div>
             <div className='cursor-pointer mt-1'>
-              <MinusIcon className="ml-1" />
+              <MinusIcon className='ml-1' />
             </div>
           </div>
         </div>
@@ -163,7 +173,12 @@ export default function Comment({
         </div>
       ))}
 
-      <DeleteComment isOpen={showDelete} onClose={() => setShowDelete(false)} />
+      <DeleteComment
+        isLoading={deleteCommentApi.isLoading}
+        isOpen={showDelete}
+        onYes={onDeleteComment}
+        onClose={() => setShowDelete(false)}
+      />
     </>
   );
 }

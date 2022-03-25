@@ -2,14 +2,13 @@ import Head from 'next/head';
 import React from 'react';
 
 import Comments from '../components/Comments/index';
+import CommentsProvider from '../context/CommentsContext';
 import { useUserContext } from '../context/UserContext';
-import { domain } from '../helpers/domain';
+import apiClient from '../helpers/api/client';
 
 export async function getServerSideProps() {
-  const commentsResponse = await fetch(`${domain}/api/comments`);
-  const comments = await commentsResponse.json();
-  const currentUserResponse = await fetch(`${domain}/api/users/current`);
-  const currentUser = await currentUserResponse.json();
+  const { data: comments } = await apiClient.get('/api/comments');
+  const { data: currentUser } = await apiClient.get('/api/users/current');
 
   return { props: { comments, currentUser } };
 }
@@ -37,7 +36,9 @@ export default function Home({ comments, currentUser }) {
         />
       </Head>
 
-      <Comments list={comments} />
+      <CommentsProvider initialData={comments}>
+        <Comments list={comments} />
+      </CommentsProvider>
     </div>
   );
 }
