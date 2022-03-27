@@ -29,31 +29,37 @@ export default function Comment({
   const [showAddReply, setShowAddReply] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [editedMsg, setEditedMsg] = useState(content);
   const isCurrentUser = currentUser && currentUser.id === userID;
-  const { deleteCommentApi } = useCommentsContext();
+  const { deleteCommentApi, updateCommentApi } = useCommentsContext();
 
   useEffect(() => {
     if (showEdit && editRef?.current) {
-      const trueContentLength = content.length + 2 + replyingTo.username.length;
+      const replyingToSpaces = replyingTo ? replyingTo.username.length + 1 : 0;
+      const trueContentLength = content.length + replyingToSpaces;
       editRef.current.focus();
       editRef.current.setSelectionRange(trueContentLength, trueContentLength);
       editRef.current.scrollTop = editRef.current.scrollHeight;
     }
-  }, []);
+  }, [showEdit, content.length, replyingTo]);
 
   const onEdit = () => {
     setShowEdit((prev) => !prev);
+    setEditedMsg(content);
   };
 
-  const onUpdate = () => {
-    setShowEdit((prev) => !prev);
+  const onUpdateAsync = async () => {
+    const response = await updateCommentApi.request(id, { content: editedMsg });
+    if (response.ok) {
+      setShowEdit((prev) => !prev);
+    }
   };
 
-  const onDelete = async () => {
+  const onDelete = () => {
     setShowDelete(!showDelete);
   };
 
-  const onDeleteComment = async () => {
+  const onDeleteAsync = async () => {
     const response = await deleteCommentApi.request(id);
     if (response.ok) {
       setShowDelete((prev) => !prev);
@@ -137,14 +143,18 @@ export default function Comment({
                 className='flex-1'
                 placeholder='Add a reply..'
                 ref={editRef}
-                value={`@${replyingTo.username} ${content}`}
-                onChange={() => console.log('test')}
+                value={`${
+                  replyingTo ? `@${replyingTo.username} ` : ''
+                }${editedMsg}`}
+                onChange={(event) => setEditedMsg(event.target.value)}
               />
             )}
           </div>
           {showEdit && (
             <div className='flex justify-end mt-2'>
-              <Button onClick={onUpdate}>Update</Button>
+              <Button isLoading={updateCommentApi.isLoading} onClick={onUpdateAsync}>
+                Update
+              </Button>
             </div>
           )}
         </div>
@@ -176,7 +186,7 @@ export default function Comment({
       <DeleteComment
         isLoading={deleteCommentApi.isLoading}
         isOpen={showDelete}
-        onYes={onDeleteComment}
+        onYes={onDeleteAsync}
         onClose={() => setShowDelete(false)}
       />
     </>
