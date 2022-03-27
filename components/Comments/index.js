@@ -10,7 +10,7 @@ export default function Comments() {
   const { comments } = useCommentsContext();
   
   return (
-    <div className='flex flex-col items-center justify-center max-w-2xl mx-auto w-full'>
+    <div className='flex flex-col items-center justify-center max-w-2xl mx-auto w-full mb-20'>
       {comments &&
         comments.map(({ id, createdAt, content, replies, score, user }) => (
           <Comment
