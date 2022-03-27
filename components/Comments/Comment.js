@@ -22,7 +22,8 @@ export default function Comment({
   score,
   username,
   userImg,
-  userID,
+  userId,
+  replyId,
   id,
 }) {
   const editRef = useRef(null);
@@ -30,8 +31,8 @@ export default function Comment({
   const [showDelete, setShowDelete] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [editedMsg, setEditedMsg] = useState(content);
-  const isCurrentUser = currentUser && currentUser.id === userID;
-  const { deleteCommentApi, updateCommentApi } = useCommentsContext();
+  const isCurrentUser = currentUser && currentUser.id === userId;
+  const { deleteCommentApi, updateCommentApi, addReplyApi } = useCommentsContext();
 
   useEffect(() => {
     if (showEdit && editRef?.current) {
@@ -70,88 +71,80 @@ export default function Comment({
     setShowAddReply((prev) => !prev);
   };
 
+  const onReplyAsync = async (content) => {
+    const response = await addReplyApi.request(id, {
+      content,
+      replyingTo: userId,
+    });
+    if (response.ok) {
+      setShowAddReply((prev) => !prev);
+    }
+  };
+
   return (
     <>
-      <Card className='mt-4 z-10 w-full'>
+      <Card className="mt-4 z-10 w-full">
         {/* Votes */}
         <div>
-          <div className='bg-gray-100 p-2 rounded-md text-center font-semibold text-violet-800 flex flex-col items-center'>
-            <div className='cursor-pointer mb-2'>
+          <div className="bg-gray-100 p-2 rounded-md text-center font-semibold text-violet-800 flex flex-col items-center">
+            <div className="cursor-pointer mb-2">
               <PlusIcon />
             </div>
-            <div className='mb-1 text-blue font-medium'>{score}</div>
-            <div className='cursor-pointer mt-1'>
-              <MinusIcon className='ml-1' />
+            <div className="mb-1 text-blue font-medium">{score}</div>
+            <div className="cursor-pointer mt-1">
+              <MinusIcon className="ml-1" />
             </div>
           </div>
         </div>
 
         {/* Content */}
-        <div className='flex-1 ml-6 w-full'>
+        <div className="flex-1 ml-6 w-full">
           {/* Title */}
-          <div className='flex mb-3 items-center'>
+          <div className="flex mb-3 items-center">
             <ProfilePicture userImg={userImg} username={username} />
-            <span className='ml-4 font-medium'>{username}</span>
-            {isCurrentUser && (
-              <div className='bg-blue px-2 ml-2 text-white rounded-md text-sm'>
-                you
-              </div>
-            )}
-            <span className='ml-4 font-light text-grayBlue flex-1'>
-              {createdAt}
-            </span>
+            <span className="ml-4 font-medium">{username}</span>
+            {isCurrentUser && <div className="bg-blue px-2 ml-2 text-white rounded-md text-sm">you</div>}
+            <span className="ml-4 font-light text-grayBlue flex-1">{createdAt}</span>
             {/* Actions */}
             {isCurrentUser && (
               <>
-                <button
-                  className='text-softRed hover:opacity-50 cursor-pointer flex items-center'
-                  onClick={onDelete}
-                >
+                <button className="text-softRed hover:opacity-50 cursor-pointer flex items-center" onClick={onDelete}>
                   <DeleteIcon />
-                  <span className='ml-2 font-medium'>Delete</span>
+                  <span className="ml-2 font-medium">Delete</span>
                 </button>
                 <button
-                  className='text-darkBlue hover:opacity-50 cursor-pointer ml-4 flex items-center'
+                  className="text-darkBlue hover:opacity-50 cursor-pointer ml-4 flex items-center"
                   onClick={onEdit}
                 >
                   <EditIcon />
-                  <span className='ml-2 font-medium'>Edit</span>
+                  <span className="ml-2 font-medium">Edit</span>
                 </button>
               </>
             )}
             {!isCurrentUser && (
-              <button
-                className='text-darkBlue hover:opacity-50 cursor-pointer flex items-center'
-                onClick={onReply}
-              >
+              <button className="text-darkBlue hover:opacity-50 cursor-pointer flex items-center" onClick={onReply}>
                 <ReplyIcon />
-                <span className='ml-2 font-medium'>Reply</span>
+                <span className="ml-2 font-medium">Reply</span>
               </button>
             )}
           </div>
           {/* Description */}
-          <div className='text-grayBlue w-full'>
-            {replyingTo && !showEdit && (
-              <span className='text-darkBlue font-medium mr-1'>
-                @{replyingTo.username}
-              </span>
-            )}
+          <div className="text-grayBlue w-full">
+            {replyingTo && !showEdit && <span className="text-darkBlue font-medium mr-1">@{replyingTo.username}</span>}
             {!showEdit && content}
             {showEdit && (
               <TextArea
-                rows='4'
-                className='flex-1'
-                placeholder='Add a reply..'
+                rows="4"
+                className="flex-1"
+                placeholder="Add a reply.."
                 ref={editRef}
-                value={`${
-                  replyingTo ? `@${replyingTo.username} ` : ''
-                }${editedMsg}`}
+                value={`${replyingTo ? `@${replyingTo.username} ` : ''}${editedMsg}`}
                 onChange={(event) => setEditedMsg(event.target.value)}
               />
             )}
           </div>
           {showEdit && (
-            <div className='flex justify-end mt-2'>
+            <div className="flex justify-end mt-2">
               <Button isLoading={updateCommentApi.isLoading} onClick={onUpdateAsync}>
                 Update
               </Button>
@@ -160,23 +153,26 @@ export default function Comment({
         </div>
       </Card>
 
-      <AddReply willShow={showAddReply}></AddReply>
+      <AddReply isLoading={addReplyApi.isLoading} onReply={onReplyAsync} willShow={showAddReply}></AddReply>
 
-      {replies.map(({ id, createdAt, content, replyingTo, score, user }) => (
-        <div className='flex w-full' key={id}>
+      {replies.map(({ id: replyId, createdAt, content, replyingTo, score, user }) => (
+        <div className="flex w-full" key={replyId}>
           {/* Vertical Line */}
           <div>
-            <div className='border-l-2 rounded-lg border-gray-200 h-full ml-10'></div>
+            <div className="border-l-2 rounded-lg border-gray-200 h-full ml-10"></div>
           </div>
-          <div className='ml-8 w-full'>
+          <div className="ml-8 w-full">
             <Comment
               key={id}
+              id={id}
+              replyId={replyId}
               createdAt={createdAt}
               content={content}
               currentUser={currentUser}
               score={score}
               username={user.username}
               userImg={user.image.webp}
+              userId={user.id}
               replyingTo={replyingTo}
             />
           </div>

@@ -3,7 +3,7 @@ const Button = ({ children, isLoading, ...otherProps }) => {
     <button
       {...otherProps}
       className={
-        'relative uppercase px-5 py-2 text-white text-center hover:bg-lightBlue bg-darkBlue rounded-md text-sm transition-colors duration-100 ' +
+        'relative uppercase px-5 py-2 text-white text-center hover:bg-lightBlue bg-darkBlue rounded-md text-sm transition-colors duration-100  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-darkBlue' +
         (otherProps.className || '')
       }
     >

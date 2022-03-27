@@ -8,9 +8,9 @@ import { useCommentsContext } from '../../context/CommentsContext';
 export default function Comments() {
   const userContext = useUserContext();
   const { comments } = useCommentsContext();
-  
+
   return (
-    <div className='flex flex-col items-center justify-center max-w-2xl mx-auto w-full mb-20'>
+    <div className="flex flex-col items-center justify-center max-w-2xl mx-auto w-full mb-20">
       {comments &&
         comments.map(({ id, createdAt, content, replies, score, user }) => (
           <Comment
@@ -21,13 +21,13 @@ export default function Comments() {
             currentUser={userContext.user}
             replies={replies}
             score={score}
-            userID={user.id}
+            userId={user.id}
             username={user.username}
             userImg={user.image.png}
           />
         ))}
 
-      <AddComment className='mt-4 w-full' />
+      <AddComment className="mt-4 w-full" />
     </div>
   );
 }

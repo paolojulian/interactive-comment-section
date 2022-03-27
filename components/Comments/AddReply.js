@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { animated, useSpring } from 'react-spring';
 import AddComment from './AddComment';
 
-const AddReply = ({ willShow }) => {
+const AddReply = ({ onReply, isLoading, willShow }) => {
   const ref = useRef(null);
 
   const replyAnimation = useSpring({
@@ -17,11 +17,8 @@ const AddReply = ({ willShow }) => {
   });
 
   return (
-    <animated.div
-      style={replyAnimation}
-      className={'w-full z-0' + ' ' + (willShow ? 'mt-4' : '')}
-    >
-      <AddComment sendText='reply' ref={ref}></AddComment>
+    <animated.div style={replyAnimation} className={'w-full z-0' + ' ' + (willShow ? 'mt-4' : '')}>
+      <AddComment isLoading={isLoading} onAddComment={onReply} sendText="reply" ref={ref}></AddComment>
     </animated.div>
   );
 };

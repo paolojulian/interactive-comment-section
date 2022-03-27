@@ -7,6 +7,7 @@ const CommentsContext = createContext({
   addCommentApi: { ...useApiProps },
   deleteCommentApi: { ...useApiProps },
   updateCommentApi: { ...useApiProps },
+  addReplyApi: { ...useApiProps },
   setComments: () => {},
 });
 
@@ -27,9 +28,7 @@ const CommentsProvider = ({ initialData, children }) => {
   const deleteCommentApi = useApi(async (id) => {
     const response = await apiClient.delete(`/api/comments/${id}`);
     if (response.ok) {
-      setComments([
-        ...comments.filter((comment) => Number(comment.id) !== Number(id)),
-      ]);
+      setComments([...comments.filter((comment) => Number(comment.id) !== Number(id))]);
     }
 
     return response;
@@ -45,9 +44,26 @@ const CommentsProvider = ({ initialData, children }) => {
     return response;
   });
 
+  const addReplyApi = useApi(async (id, payload) => {
+    const response = await apiClient.post(`/api/comments/${id}/replies`, payload);
+    if (response.ok) {
+      const commentToUpdate = comments.find((comment) => comment.id === id);
+      commentToUpdate.replies.push(response.data);
+    }
+
+    return response;
+  });
+
   return (
     <CommentsContext.Provider
-      value={{ comments, addCommentApi, deleteCommentApi, updateCommentApi, setComments }}
+      value={{
+        comments,
+        addCommentApi,
+        deleteCommentApi,
+        updateCommentApi,
+        addReplyApi,
+        setComments,
+      }}
     >
       {children}
     </CommentsContext.Provider>
