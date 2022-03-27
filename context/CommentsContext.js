@@ -9,6 +9,7 @@ const CommentsContext = createContext({
   updateCommentApi: { ...useApiProps },
   addReplyApi: { ...useApiProps },
   deleteReplyApi: { ...useApiProps },
+  updateReplyApi: { ...useApiProps },
   setComments: () => {},
 });
 
@@ -57,14 +58,25 @@ const CommentsProvider = ({ initialData, children }) => {
 
   const deleteReplyApi = useApi(async (id, replyId) => {
     const response = await apiClient.delete(`/api/comments/${id}/replies/${replyId}`);
-    if (response.ok) {
-      const commentToUpdate = comments.find((comment) => comment.id === id);
-      commentToUpdate.replies.forEach((reply, i) => {
-        if (reply.id === replyId) {
-          commentToUpdate.replies.splice(i, 1);
-        }
-      });
-    }
+    if (!response.ok) return response;
+
+    const commentToUpdate = comments.find((comment) => comment.id === id);
+    commentToUpdate.replies.forEach((reply, i) => {
+      if (reply.id === replyId) {
+        commentToUpdate.replies.splice(i, 1);
+      }
+    });
+
+    return response;
+  });
+
+  const updateReplyApi = useApi(async (id, replyId, payload) => {
+    const response = await apiClient.put(`/api/comments/${id}/replies/${replyId}`, payload);
+    if (!response.ok) return response;
+
+    const commentToUpdate = comments.find((comment) => comment.id === id);
+    const replyToUpdate = commentToUpdate.replies.find((reply) => reply.id === replyId);
+    replyToUpdate.content = payload.content;
 
     return response;
   });
@@ -78,6 +90,7 @@ const CommentsProvider = ({ initialData, children }) => {
         updateCommentApi,
         addReplyApi,
         deleteReplyApi,
+        updateReplyApi,
         setComments,
       }}
     >

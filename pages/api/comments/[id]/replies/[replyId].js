@@ -25,6 +25,15 @@ const handler = async (req, res) => {
     return res.status(204).send();
   }
 
+  if (req.method === 'PUT') {
+    const replyToUpdate = comment.replies.find((reply) => reply.id === id);
+    replyToUpdate.content = req.body.content;
+
+    saveJsonFile(db);
+
+    return res.status(200).json(db);
+  }
+
   return res.status(200).send();
 };
 

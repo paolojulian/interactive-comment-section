@@ -33,12 +33,11 @@ export default function Comment({
   const [showEdit, setShowEdit] = useState(false);
   const [editedMsg, setEditedMsg] = useState(content);
   const isCurrentUser = currentUser && currentUser.id === userId;
-  const { deleteCommentApi, updateCommentApi, addReplyApi, deleteReplyApi } = useCommentsContext();
+  const { deleteCommentApi, updateCommentApi, addReplyApi, deleteReplyApi, updateReplyApi } = useCommentsContext();
 
   useEffect(() => {
     if (showEdit && editRef?.current) {
-      const replyingToSpaces = replyingTo ? replyingTo.username.length + 1 : 0;
-      const trueContentLength = content.length + replyingToSpaces;
+      const trueContentLength = content.length;
       editRef.current.focus();
       editRef.current.setSelectionRange(trueContentLength, trueContentLength);
       editRef.current.scrollTop = editRef.current.scrollHeight;
@@ -51,10 +50,18 @@ export default function Comment({
   };
 
   const onUpdateAsync = async () => {
-    const response = await updateCommentApi.request(id, { content: editedMsg });
-    if (response.ok) {
-      setShowEdit((prev) => !prev);
+    if (!isReply) {
+      const response = await updateCommentApi.request(id, { content: editedMsg });
+      if (!response.ok) return;
+
+      return setShowEdit((prev) => !prev);
     }
+
+    // Update a reply
+    const response = await updateReplyApi.request(id, replyId, { content: editedMsg });
+    if (!response.ok) return;
+
+    return setShowEdit((prev) => !prev);
   };
 
   const onDelete = () => {
@@ -147,14 +154,17 @@ export default function Comment({
                 className="flex-1"
                 placeholder="Add a reply.."
                 ref={editRef}
-                value={`${replyingTo ? `@${replyingTo.username} ` : ''}${editedMsg}`}
+                value={editedMsg}
                 onChange={(event) => setEditedMsg(event.target.value)}
               />
             )}
           </div>
           {showEdit && (
             <div className="flex justify-end mt-2">
-              <Button isLoading={updateCommentApi.isLoading} onClick={onUpdateAsync}>
+              <Button
+                isLoading={isReply ? updateReplyApi.isLoading : updateCommentApi.isLoading}
+                onClick={onUpdateAsync}
+              >
                 Update
               </Button>
             </div>

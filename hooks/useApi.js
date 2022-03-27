@@ -1,5 +1,6 @@
 import Timeout from 'await-timeout';
 import { useState } from 'react';
+import { isProduction } from '../helpers/settings';
 
 export const useApiProps = {
   data: {},
@@ -15,7 +16,9 @@ function useApi(apiFunc) {
 
   const request = async (...args) => {
     setIsLoading(true);
-    await Timeout.set(500);
+    if (!isProduction) {
+      await Timeout.set(500);
+    }
     const response = await apiFunc(...args);
     setIsLoading(false);
 
