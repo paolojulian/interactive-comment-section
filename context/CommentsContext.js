@@ -8,6 +8,7 @@ const CommentsContext = createContext({
   deleteCommentApi: { ...useApiProps },
   updateCommentApi: { ...useApiProps },
   addReplyApi: { ...useApiProps },
+  deleteReplyApi: { ...useApiProps },
   setComments: () => {},
 });
 
@@ -54,6 +55,20 @@ const CommentsProvider = ({ initialData, children }) => {
     return response;
   });
 
+  const deleteReplyApi = useApi(async (id, replyId) => {
+    const response = await apiClient.delete(`/api/comments/${id}/replies/${replyId}`);
+    if (response.ok) {
+      const commentToUpdate = comments.find((comment) => comment.id === id);
+      commentToUpdate.replies.forEach((reply, i) => {
+        if (reply.id === replyId) {
+          commentToUpdate.replies.splice(i, 1);
+        }
+      });
+    }
+
+    return response;
+  });
+
   return (
     <CommentsContext.Provider
       value={{
@@ -62,6 +77,7 @@ const CommentsProvider = ({ initialData, children }) => {
         deleteCommentApi,
         updateCommentApi,
         addReplyApi,
+        deleteReplyApi,
         setComments,
       }}
     >

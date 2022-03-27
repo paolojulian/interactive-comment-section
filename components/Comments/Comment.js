@@ -16,6 +16,7 @@ import { useCommentsContext } from '../../context/CommentsContext';
 export default function Comment({
   replies = [],
   replyingTo = null,
+  isReply = false,
   content,
   createdAt,
   currentUser,
@@ -32,7 +33,7 @@ export default function Comment({
   const [showEdit, setShowEdit] = useState(false);
   const [editedMsg, setEditedMsg] = useState(content);
   const isCurrentUser = currentUser && currentUser.id === userId;
-  const { deleteCommentApi, updateCommentApi, addReplyApi } = useCommentsContext();
+  const { deleteCommentApi, updateCommentApi, addReplyApi, deleteReplyApi } = useCommentsContext();
 
   useEffect(() => {
     if (showEdit && editRef?.current) {
@@ -61,10 +62,18 @@ export default function Comment({
   };
 
   const onDeleteAsync = async () => {
-    const response = await deleteCommentApi.request(id);
-    if (response.ok) {
-      setShowDelete((prev) => !prev);
+    if (!isReply) {
+      const response = await deleteCommentApi.request(id);
+      if (!response.ok) return;
+
+      return setShowDelete((prev) => !prev);
     }
+
+    // Delete a reply
+    const response = await deleteReplyApi.request(id, replyId);
+    if (!response.ok) return;
+
+    return setShowDelete((prev) => !prev);
   };
 
   const onReply = () => {
@@ -165,6 +174,7 @@ export default function Comment({
             <Comment
               key={id}
               id={id}
+              isReply={true}
               replyId={replyId}
               createdAt={createdAt}
               content={content}
@@ -180,7 +190,7 @@ export default function Comment({
       ))}
 
       <DeleteComment
-        isLoading={deleteCommentApi.isLoading}
+        isLoading={isReply ? deleteReplyApi.isLoading : deleteCommentApi.isLoading}
         isOpen={showDelete}
         onYes={onDeleteAsync}
         onClose={() => setShowDelete(false)}
