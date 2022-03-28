@@ -48,7 +48,7 @@ const Modal = ({
       aria-modal='true'
     >
       <animated.div style={animation}>
-        <div className='flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
+        <div className='flex items-center md:items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
           <div className='fixed inset-0' aria-hidden='true'></div>
           <span
             className='hidden sm:inline-block sm:align-middle sm:h-screen'

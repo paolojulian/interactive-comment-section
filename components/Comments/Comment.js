@@ -99,22 +99,44 @@ export default function Comment({
 
   return (
     <>
-      <Card className="mt-4 z-10 w-full">
+      <Card className="mt-4 z-10 w-full flex flex-col-reverse md:flex-row">
         {/* Votes */}
-        <div>
-          <div className="bg-gray-100 p-2 rounded-md text-center font-semibold text-violet-800 flex flex-col items-center">
-            <div className="cursor-pointer mb-2">
+        <div className="mt-4 md:mt-0 flex md:flex-none justify-between">
+          <div className="bg-gray-100 px-2 p-1 md:p-2 rounded-md text-center font-semibold text-violet-800 flex flex-row md:flex-col items-center">
+            <div className="cursor-pointer mb-0 md:mb-2">
               <PlusIcon />
             </div>
-            <div className="mb-1 text-blue font-medium">{score}</div>
-            <div className="cursor-pointer mt-1">
+            <div className="mb-0 md:mb-1 ml-2 md:ml-0 text-blue font-medium">{score}</div>
+            <div className="cursor-pointer ml-2 md:ml-0 mt-1 md:mt-1">
               <MinusIcon className="ml-1" />
             </div>
           </div>
+
+          {/* Actions */}
+          {isCurrentUser && (
+            <div className="flex md:hidden">
+              <button className="text-softRed hover:opacity-50 cursor-pointer flex items-center" onClick={onDelete}>
+                <DeleteIcon />
+                <span className="ml-2 font-medium">Delete</span>
+              </button>
+              <button className="text-darkBlue hover:opacity-50 cursor-pointer ml-4 flex items-center" onClick={onEdit}>
+                <EditIcon />
+                <span className="ml-2 font-medium">Edit</span>
+              </button>
+            </div>
+          )}
+          {!isCurrentUser && (
+            <div className="block md:hidden">
+              <button className="text-darkBlue hover:opacity-50 cursor-pointer flex items-center" onClick={onReply}>
+                <ReplyIcon />
+                <span className="ml-2 font-medium">Reply</span>
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Content */}
-        <div className="flex-1 ml-6 w-full">
+        <div className="flex-1 ml-0 md:ml-6 w-full">
           {/* Title */}
           <div className="flex mb-3 items-center">
             <ProfilePicture userImg={userImg} username={username} />
@@ -123,7 +145,7 @@ export default function Comment({
             <span className="ml-4 font-light text-grayBlue flex-1">{createdAt}</span>
             {/* Actions */}
             {isCurrentUser && (
-              <>
+              <div className='hidden md:flex flex-row'>
                 <button className="text-softRed hover:opacity-50 cursor-pointer flex items-center" onClick={onDelete}>
                   <DeleteIcon />
                   <span className="ml-2 font-medium">Delete</span>
@@ -135,10 +157,13 @@ export default function Comment({
                   <EditIcon />
                   <span className="ml-2 font-medium">Edit</span>
                 </button>
-              </>
+              </div>
             )}
             {!isCurrentUser && (
-              <button className="text-darkBlue hover:opacity-50 cursor-pointer flex items-center" onClick={onReply}>
+              <button
+                className="hidden md:flex text-darkBlue hover:opacity-50 cursor-pointer items-center"
+                onClick={onReply}
+              >
                 <ReplyIcon />
                 <span className="ml-2 font-medium">Reply</span>
               </button>
@@ -175,12 +200,12 @@ export default function Comment({
       <AddReply isLoading={addReplyApi.isLoading} onReply={onReplyAsync} willShow={showAddReply}></AddReply>
 
       {replies.map(({ id: replyId, createdAt, content, replyingTo, score, user }) => (
-        <div className="flex w-full" key={replyId}>
+        <div className="flex w-auto md:w-full" key={replyId}>
           {/* Vertical Line */}
-          <div>
-            <div className="border-l-2 rounded-lg border-gray-200 h-full ml-10"></div>
+          <div className="ml-0 md:ml-10">
+            <div className="border-l-2 rounded-lg border-gray-200 h-full"></div>
           </div>
-          <div className="ml-8 w-full">
+          <div className="ml-4 md:ml-8 flex-1">
             <Comment
               key={id}
               id={id}

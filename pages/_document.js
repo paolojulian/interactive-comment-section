@@ -2,7 +2,7 @@ import { Html, Head, Main, NextScript } from 'next/document';
 
 const Document = () => {
   return (
-    <Html lang='en'>
+    <Html lang='en' className='w-fit md:w-full'>
       <Head>
         <link rel='preconnect' href='https://fonts.googleapis.com'></link>
         <link
@@ -14,7 +14,7 @@ const Document = () => {
           rel='stylesheet'
         ></link>
       </Head>
-      <body className='bg-gray-100'>
+      <body className='bg-gray-100 w-fit md:w-full'>
         <Main />
         <NextScript />
       </body>

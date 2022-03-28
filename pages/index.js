@@ -21,7 +21,7 @@ export default function Home({ comments, currentUser }) {
   }, []);
 
   return (
-    <div className='flex flex-col pt-10'>
+    <div className='flex flex-col pt-0 md:pt-10'>
       <Head>
         <title>Interactive Comment Section</title>
         <meta
