@@ -100,9 +100,9 @@ export default function Comment({
   return (
     <>
       <Card className="mt-4 z-10 w-full flex flex-col-reverse md:flex-row">
-        {/* Votes */}
         <div className="mt-4 md:mt-0 flex md:flex-none justify-between">
-          <div className="bg-gray-100 px-2 p-1 md:p-2 rounded-md text-center font-semibold text-violet-800 flex flex-row md:flex-col items-center">
+          {/* Votes */}
+          <div className="h-auto md:h-fit bg-gray-100 px-2 p-1 md:p-2 rounded-md text-center font-semibold text-violet-800 flex flex-row md:flex-col items-center">
             <div className="cursor-pointer mb-0 md:mb-2">
               <PlusIcon />
             </div>
@@ -200,7 +200,7 @@ export default function Comment({
       <AddReply isLoading={addReplyApi.isLoading} onReply={onReplyAsync} willShow={showAddReply}></AddReply>
 
       {replies.map(({ id: replyId, createdAt, content, replyingTo, score, user }) => (
-        <div className="flex w-auto md:w-full" key={replyId}>
+        <div className="flex w-full" key={replyId}>
           {/* Vertical Line */}
           <div className="ml-0 md:ml-10">
             <div className="border-l-2 rounded-lg border-gray-200 h-full"></div>
