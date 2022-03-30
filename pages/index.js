@@ -18,7 +18,7 @@ export default function Home({ comments, currentUser }) {
 
   React.useEffect(() => {
     userContext.setUser(currentUser)
-  }, []);
+  }, [currentUser, userContext]);
 
   return (
     <div className='flex flex-col pt-0 md:pt-10'>
