@@ -10,6 +10,8 @@ const CommentsContext = createContext({
   addReplyApi: { ...useApiProps },
   deleteReplyApi: { ...useApiProps },
   updateReplyApi: { ...useApiProps },
+  voteApi: { ...useApiProps },
+  voteReplyApi: { ...useApiProps },
   setComments: () => {},
 });
 
@@ -81,6 +83,37 @@ const CommentsProvider = ({ initialData, children }) => {
     return response;
   });
 
+  const voteApi = useApi(async (id, payload) => {
+    const commentToUpdate = comments.find((comment) => comment.id === id);
+    const votedTemp = commentToUpdate.voted;
+    commentToUpdate.score += payload.voted;
+    commentToUpdate.voted += payload.voted;
+
+    const response = await apiClient.put(`/api/comments/${id}`, payload);
+    if (!response.ok) {
+      commentToUpdate.score -= payload.voted;
+      commentToUpdate.voted = votedTemp;
+    }
+
+    return response;
+  });
+
+  const voteReplyApi = useApi(async (id, replyId, payload) => {
+    const commentToUpdate = comments.find((comment) => comment.id === id);
+    const replyToUpdate = commentToUpdate.replies.find((reply) => reply.id === replyId);
+    const votedTemp = replyToUpdate.voted;
+    replyToUpdate.score += payload.voted;
+    replyToUpdate.voted += payload.voted;
+
+    const response = await apiClient.put(`/api/comments/${id}/replies/${replyId}`, payload);
+    if (!response.ok) {
+      replyToUpdate.score -= payload.voted;
+      replyToUpdate.voted = votedTemp;
+    }
+
+    return response;
+  });
+
   return (
     <CommentsContext.Provider
       value={{
@@ -91,6 +124,8 @@ const CommentsProvider = ({ initialData, children }) => {
         addReplyApi,
         deleteReplyApi,
         updateReplyApi,
+        voteApi,
+        voteReplyApi,
         setComments,
       }}
     >

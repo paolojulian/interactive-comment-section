@@ -16,10 +16,10 @@ function useApi(apiFunc) {
 
   const request = async (...args) => {
     setIsLoading(true);
+    const response = await apiFunc(...args);
     if (!isProduction) {
       await Timeout.set(500);
     }
-    const response = await apiFunc(...args);
     setIsLoading(false);
 
     setIsError(!response.ok);

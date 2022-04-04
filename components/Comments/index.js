@@ -12,7 +12,7 @@ export default function Comments() {
   return (
     <div className="flex flex-col items-center justify-center max-w-2xl mx-auto w-full mb-0 md:mb-20 p-4 md:p-0">
       {comments &&
-        comments.map(({ id, createdAt, content, replies, score, user }) => (
+        comments.map(({ id, createdAt, content, replies, score, user, voted }) => (
           <Comment
             key={id}
             id={id}
@@ -24,6 +24,7 @@ export default function Comments() {
             userId={user.id}
             username={user.username}
             userImg={user.image.png}
+            voted={voted}
           />
         ))}
 

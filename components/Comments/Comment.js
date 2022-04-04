@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 import AddReply from './AddReply';
 import Card from '../Card';
@@ -13,19 +13,25 @@ import TextArea from '../TextArea';
 import Button from '../Button';
 import { useCommentsContext } from '../../context/CommentsContext';
 
+const voteTypes = {
+  upvote: 1,
+  downvote: -1,
+};
+
 export default function Comment({
   replies = [],
   replyingTo = null,
   isReply = false,
+  id,
   content,
   createdAt,
   currentUser,
+  replyId,
   score,
   username,
   userImg,
   userId,
-  replyId,
-  id,
+  voted,
 }) {
   const editRef = useRef(null);
   const [showAddReply, setShowAddReply] = useState(false);
@@ -33,7 +39,8 @@ export default function Comment({
   const [showEdit, setShowEdit] = useState(false);
   const [editedMsg, setEditedMsg] = useState(content);
   const isCurrentUser = currentUser && currentUser.id === userId;
-  const { deleteCommentApi, updateCommentApi, addReplyApi, deleteReplyApi, updateReplyApi } = useCommentsContext();
+  const { deleteCommentApi, updateCommentApi, addReplyApi, deleteReplyApi, updateReplyApi, voteApi, voteReplyApi } =
+    useCommentsContext();
 
   useEffect(() => {
     if (showEdit && editRef?.current) {
@@ -97,18 +104,55 @@ export default function Comment({
     }
   };
 
+  /**
+   * @param {1|-1} payload
+   */
+  const onVote = useCallback(
+    async (payload) => {
+      if (voteApi.isLoading) return;
+
+      switch (payload) {
+        case voteTypes.upvote:
+          if (voted >= 1) return; // Cannot upvote if already upvoted
+          break;
+        case voteTypes.downvote:
+          if (voted <= -1) return; // Cannot downvote if already downvoted
+          break;
+      }
+
+      if (isReply) {
+        const response = await voteReplyApi.request(id, replyId, { voted: payload });
+        if (response.ok) {
+        }
+        return;
+      }
+
+      const response = await voteApi.request(id, { voted: payload });
+      if (response.ok) {
+      }
+      return;
+    },
+    [voted, voteApi, voteReplyApi, id, replyId, isReply]
+  );
+
   return (
     <>
       <Card className="mt-4 z-10 w-full flex flex-col-reverse md:flex-row">
         <div className="mt-4 md:mt-0 flex md:flex-none justify-between">
           {/* Votes */}
           <div className="h-auto md:h-fit bg-gray-100 px-2 p-1 md:p-2 rounded-md text-center font-semibold text-violet-800 flex flex-row md:flex-col items-center">
-            <div className="cursor-pointer mb-0 md:mb-2">
-              <PlusIcon />
+            <div
+              className={`${voted === 1 ? '' : 'cursor-pointer'} mb-0 md:mb-2`}
+              onClick={() => onVote(voteTypes.upvote)}
+            >
+              <PlusIcon isActive={voted === 1} />
             </div>
             <div className="mb-0 md:mb-1 ml-2 md:ml-0 text-blue font-medium">{score}</div>
-            <div className="cursor-pointer ml-2 md:ml-0 mt-1 md:mt-1">
-              <MinusIcon className="ml-1" />
+            <div
+              className={`${voted === -1 ? '' : 'cursor-pointer'} ml-2 md:ml-0 mt-1 md:mt-1`}
+              onClick={() => onVote(voteTypes.downvote)}
+            >
+              <MinusIcon className="ml-1" isActive={voted === -1} />
             </div>
           </div>
 
@@ -145,7 +189,7 @@ export default function Comment({
             <span className="ml-4 font-light text-grayBlue flex-1">{createdAt}</span>
             {/* Actions */}
             {isCurrentUser && (
-              <div className='hidden md:flex flex-row'>
+              <div className="hidden md:flex flex-row">
                 <button className="text-softRed hover:opacity-50 cursor-pointer flex items-center" onClick={onDelete}>
                   <DeleteIcon />
                   <span className="ml-2 font-medium">Delete</span>
@@ -199,7 +243,7 @@ export default function Comment({
 
       <AddReply isLoading={addReplyApi.isLoading} onReply={onReplyAsync} willShow={showAddReply}></AddReply>
 
-      {replies.map(({ id: replyId, createdAt, content, replyingTo, score, user }) => (
+      {replies.map(({ id: replyId, createdAt, content, replyingTo, score, voted: replyVoted, user }) => (
         <div className="flex w-full" key={replyId}>
           {/* Vertical Line */}
           <div className="ml-0 md:ml-10">
@@ -218,6 +262,7 @@ export default function Comment({
               username={user.username}
               userImg={user.image.webp}
               userId={user.id}
+              voted={replyVoted}
               replyingTo={replyingTo}
             />
           </div>
