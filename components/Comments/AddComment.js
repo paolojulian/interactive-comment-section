@@ -24,7 +24,7 @@ function AddComment({ sendText = 'send', onAddComment, isLoading, className, ...
   return (
     <Card className={"w-full flex flex-col md:flex-row " + className} ref={ref} {...props}>
       <div className="hidden md:block">
-        <ProfilePicture userImg={userContext.user.image.webp} username={userContext.user.username} />
+        <ProfilePicture userImg={userContext.user.image.png} username={userContext.user.username} />
       </div>
       <div className="flex-1 mx-0 md:mx-4 h-24">
         <textarea
@@ -43,7 +43,7 @@ function AddComment({ sendText = 'send', onAddComment, isLoading, className, ...
       {/* Mobile view */}
       <div className="flex md:hidden justify-between items-center mt-4 md:mt-0">
         <div>
-          <ProfilePicture userImg={userContext.user.image.webp} username={userContext.user.username} />
+          <ProfilePicture userImg={userContext.user.image.png} username={userContext.user.username} />
         </div>
         <Button onClick={onSubmit} isLoading={addCommentApi.isLoading || isLoading === true}>
           {sendText}
