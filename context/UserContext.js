@@ -9,28 +9,13 @@ const initialData = {
 const UserContext = createContext({
   user: initialData,
   setUser: () => {},
-  loginAsync: () => {},
 });
 
-const UserProvider = ({ children }) => {
+const UserProvider = ({ initialData, children }) => {
   const [user, setUser] = useState(initialData);
 
-  const loginAsync = async () => {
-    try {
-      const response = await fetch('/api/users/current');
-      const { id, username, image } = await response.json();
-      setUser(() => ({
-        id,
-        username,
-        image,
-      }));
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   return (
-    <UserContext.Provider value={{ user, setUser, loginAsync }}>
+    <UserContext.Provider value={{ user, setUser }}>
       {children}
     </UserContext.Provider>
   );

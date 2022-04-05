@@ -12,6 +12,7 @@ import ReplyIcon from '../Icons/ReplyIcon';
 import TextArea from '../TextArea';
 import Button from '../Button';
 import { useCommentsContext } from '../../context/CommentsContext';
+import { formatUTCToLocalTime } from '../../helpers/date';
 
 const voteTypes = {
   upvote: 1,
@@ -186,7 +187,7 @@ export default function Comment({
             <ProfilePicture userImg={userImg} username={username} />
             <span className="ml-4 font-medium">{username}</span>
             {isCurrentUser && <div className="bg-blue px-2 ml-2 text-white rounded-md text-sm">you</div>}
-            <span className="ml-4 font-light text-grayBlue flex-1">{createdAt}</span>
+            <span className="ml-4 font-light text-grayBlue flex-1">{formatUTCToLocalTime(createdAt)}</span>
             {/* Actions */}
             {isCurrentUser && (
               <div className="hidden md:flex flex-row">

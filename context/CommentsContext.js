@@ -18,12 +18,12 @@ const CommentsContext = createContext({
 const CommentsProvider = ({ initialData, children }) => {
   const [comments, setComments] = useState(initialData);
 
-  const addCommentApi = useApi(async (comment) => {
-    const data = { comment };
-    const response = await apiClient.post('/api/comments/add', data);
+  const addCommentApi = useApi(async (content) => {
+    const data = { content };
+    const response = await apiClient.post('/api/comments', data);
 
     if (response.ok) {
-      setComments([...comments, response.data.comment]);
+      setComments([...comments, response.data]);
     }
 
     return response;
