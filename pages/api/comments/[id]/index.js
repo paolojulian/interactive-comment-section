@@ -1,4 +1,5 @@
 import { saveJsonFile } from '../../../../helpers/api/saveJsonFile';
+import CommentService from '../../../../helpers/api/services/CommentService';
 
 let db = require('/data/db.json');
 
@@ -19,14 +20,14 @@ const onVote = (req, res) => {
       }
       break;
     default:
-      return res.status(422).json({ message: 'Invalid parameters.' })
+      return res.status(422).json({ message: 'Invalid parameters.' });
   }
   commentToUpdate.voted += voted;
   commentToUpdate.score += voted;
   saveJsonFile(db);
 
   return res.status(200).json(commentToUpdate);
-}
+};
 
 /**
  * Handler
@@ -35,13 +36,17 @@ const onVote = (req, res) => {
  * @param {import('next').NextApiResponse} res
  */
 const handler = async (req, res) => {
-  const id = Number(req.query.id);
+  const id = req.query.id;
 
-  if (req.method === 'DELETE') {
-    db.comments = db.comments.filter((comment) => comment.id !== id);
-    saveJsonFile(db);
-
-    return res.status(200).json(db);
+  switch (req.method) {
+    case 'DELETE':
+      const response = await CommentService.deleteComment(id);
+      if (!response.ok) {
+        return res.status(500).send();
+      }
+      return res.status(204).send();
+    default:
+      break;
   }
 
   if (req.method === 'PUT') {

@@ -26,6 +26,10 @@ UserSchema.statics.findCurrentUser = function () {
   return mongoose.model('User').findOne({ is_logged_in: true });
 };
 
+UserSchema.statics.deleteById = function(_id) {
+  return this.deleteOne({ _id: _id })
+};
+
 let User;
 try {
   User = mongoose.model('User');

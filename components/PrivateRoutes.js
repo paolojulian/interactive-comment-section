@@ -12,7 +12,6 @@ function PrivateRoutes(props, pageProps) {
 
 export async function getServerSideProps() {
   const response = await apiClient.get('/api/users/current');
-  con
 
   return { props: { currentUser: response.data } };
 }
