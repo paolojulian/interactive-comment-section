@@ -40,32 +40,22 @@ const handler = async (req, res) => {
 
   switch (req.method) {
     case 'DELETE':
-      const response = await CommentService.deleteComment(id);
-      if (!response.ok) {
-        return res.status(500).json(response.data);
+      const deleteComment = await CommentService.deleteComment(id);
+      if (!deleteComment.ok) {
+        return res.status(500).json(deleteComment.data);
       }
       return res.status(204).send();
 
     case 'PUT':
-      return res.status(200).json();
+      if (req.body.voted !== undefined) {
+        return onVote(req, res);
+      }
+      const updateComment = await CommentService.updateComment(id, req.body);
+      return res.status(updateComment.ok ? 200 : 500).json(updateComment.data);
 
     default:
-      break;
+      return res.status(404).send();
   }
-
-  if (req.method === 'PUT') {
-    if (req.body.voted !== undefined) {
-      return onVote(req, res);
-    }
-
-    const commentToUpdate = db.comments.find((comment) => comment.id === id);
-    commentToUpdate.content = req.body.content;
-    saveJsonFile(db);
-
-    return res.status(200).json(db);
-  }
-
-  return res.status(200).send();
 };
 
 export default handler;

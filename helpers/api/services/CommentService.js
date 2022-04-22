@@ -54,10 +54,29 @@ const CommentService = (() => {
     }
   };
 
+  /**
+   * Update a comment
+   *
+   * @returns { Promise<ResponseHandler> }
+   */
+  const updateComment = async (id, data) => {
+    const filter = { _id: id };
+    const updateData = {
+      content: data.content,
+    };
+    try {
+      const updatedComment = await Comment.findOneAndUpdate(filter, updateData, { new: true });
+      return new ResponseHandler(true, updatedComment);
+    } catch (error) {
+      return new ResponseHandler(false, error);
+    }
+  };
+
   return {
     addComment,
     deleteComment,
     fetchComments,
+    updateComment,
   };
 })();
 

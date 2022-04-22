@@ -217,7 +217,7 @@ export default function Comment({
           {/* Description */}
           <div className="text-grayBlue w-full">
             {replyingTo && !showEdit && <span className="text-darkBlue font-medium mr-1">@{replyingTo.username}</span>}
-            {!showEdit && content}
+            <p className='whitespace-pre-wrap'>{!showEdit && content}</p>
             {showEdit && (
               <TextArea
                 rows="4"

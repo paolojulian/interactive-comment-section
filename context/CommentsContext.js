@@ -40,9 +40,13 @@ const CommentsProvider = ({ initialData, children }) => {
 
   const updateCommentApi = useApi(async (id, payload) => {
     const response = await apiClient.put(`/api/comments/${id}`, payload);
-    if (response.ok) {
-      const commentToUpdate = comments.find((comment) => comment.id === id);
-      commentToUpdate.content = payload.content;
+    if (!response.ok) {
+      return response;
+    }
+
+    const commentToUpdate = comments.find((comment) => comment._id === id);
+    if (commentToUpdate && response.data.content) {
+      commentToUpdate.content = response.data.content
     }
 
     return response;
