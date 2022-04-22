@@ -30,10 +30,12 @@ const CommentService = (() => {
    */
   const deleteComment = async (id) => {
     try {
-      await User.deleteById(id);
+      const response = await Comment.deleteOne({ _id: id });
+      if (!response.acknowledged) {
+        throw 'Server error';
+      }
       return new ResponseHandler(true);
     } catch (error) {
-      console.error(error);
       return new ResponseHandler(false, error);
     }
   };
@@ -41,14 +43,14 @@ const CommentService = (() => {
   /**
    * Fetch the list of comments
    *
-   * @returns { Promise<Object> }
+   * @returns { Promise<ResponseHandler> }
    */
   const fetchComments = async () => {
     try {
       const comments = await Comment.find().limit(20).populate('user', ['username', 'image']);
       return new ResponseHandler(true, comments);
     } catch (error) {
-      return new ResponseHandler(true, error);
+      return new ResponseHandler(false, error);
     }
   };
 

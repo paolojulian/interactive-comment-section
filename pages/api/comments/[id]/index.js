@@ -42,9 +42,13 @@ const handler = async (req, res) => {
     case 'DELETE':
       const response = await CommentService.deleteComment(id);
       if (!response.ok) {
-        return res.status(500).send();
+        return res.status(500).json(response.data);
       }
       return res.status(204).send();
+
+    case 'PUT':
+      return res.status(200).json();
+
     default:
       break;
   }

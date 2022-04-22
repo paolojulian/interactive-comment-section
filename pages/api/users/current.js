@@ -6,8 +6,8 @@ const handler = async (req, res) => {
   switch (method) {
     case 'GET':
       const response = await UserService.getCurrentUser();
-      if (!response.ok) return res.status(500).send(response.error);
-      return res.status(200).json(response.data);
+
+      return res.status(response.ok ? 200 : 500).json(response.data);
 
     default:
       return res.status(404).send();

@@ -27,7 +27,7 @@ UserSchema.statics.findCurrentUser = function () {
 };
 
 UserSchema.statics.deleteById = function(_id) {
-  return this.deleteOne({ _id: _id })
+  return this.deleteOne({ _id });
 };
 
 let User;

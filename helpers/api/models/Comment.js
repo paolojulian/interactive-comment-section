@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import User from './User';
 
 const CommentSchema = new Schema({
   content: {
@@ -31,6 +30,10 @@ const CommentSchema = new Schema({
     default: Date.now,
   },
 });
+
+CommentSchema.statics.deleteById = function(_id) {
+  return this.deleteOne({ _id });
+};
 
 let Comment;
 try {

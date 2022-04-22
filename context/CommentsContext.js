@@ -32,7 +32,7 @@ const CommentsProvider = ({ initialData, children }) => {
   const deleteCommentApi = useApi(async (id) => {
     const response = await apiClient.delete(`/api/comments/${id}`);
     if (response.ok) {
-      setComments([...comments.filter((comment) => Number(comment.id) !== Number(id))]);
+      setComments([...comments.filter((comment) => comment._id !== id)]);
     }
 
     return response;

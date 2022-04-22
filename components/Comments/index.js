@@ -23,7 +23,7 @@ export default function Comments() {
             score={score}
             userId={user._id}
             username={user.username}
-            userImg={user.image.png}
+            userImg={user.image?.png}
             voted={voted}
           />
         ))}
