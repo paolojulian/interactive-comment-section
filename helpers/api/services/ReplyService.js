@@ -1,14 +1,14 @@
 import Comment from '../models/Comment';
 import User from '../models/User';
-import ResponseHandler from '../../../helpers/response-handler';
+import ResponseHandler from '../../response-handler';
 
 const CommentService = (() => {
   /**
-   * Add a comment
+   * Add a reply
    *
    * @returns { Promise<ResponseHandler> }
    */
-  const addComment = async ({ content }) => {
+  const addReply = async ({ content }) => {
     const currentUser = await User.findCurrentUser();
     try {
       const createdUser = await Comment.create({
@@ -47,22 +47,7 @@ const CommentService = (() => {
    */
   const fetchComments = async () => {
     try {
-      const comments = await Comment.find()
-        .limit(20)
-        .populate('user', ['username', 'image'])
-        .populate({
-          path: 'replies',
-          populate: [
-            {
-              path: 'user',
-              model: 'User',
-            },
-            {
-              path: 'replyingTo',
-              model: 'User',
-            },
-          ],
-        });
+      const comments = await Comment.find().limit(20).populate('user', ['username', 'image']);
       return new ResponseHandler(true, comments);
     } catch (error) {
       return new ResponseHandler(false, error);

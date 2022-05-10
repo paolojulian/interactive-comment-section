@@ -1,7 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
-import { ReplySchema } from './Reply';
 
-const CommentSchema = new Schema({
+export const ReplySchema = new Schema({
   content: {
     type: Schema.Types.String,
     required: true,
@@ -16,13 +15,12 @@ const CommentSchema = new Schema({
     required: false,
     default: 0,
   },
-  replies: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Reply',
-      required: false,
-    },
-  ],
+  replyingTo: {
+    type: mongoose.ObjectId,
+    ref: 'User',
+    required: false,
+    default: null,
+  },
   user: {
     type: mongoose.ObjectId,
     ref: 'User',
@@ -33,15 +31,15 @@ const CommentSchema = new Schema({
   },
 });
 
-CommentSchema.statics.deleteById = function (_id) {
+ReplySchema.statics.deleteById = function(_id) {
   return this.deleteOne({ _id });
 };
 
-let Comment;
+let Reply;
 try {
-  Comment = mongoose.model('Comment');
+  Reply = mongoose.model('Reply');
 } catch (e) {
-  Comment = mongoose.model('Comment', CommentSchema);
+  Reply = mongoose.model('Reply', ReplySchema);
 }
 
-module.exports = Comment;
+module.exports = Reply;

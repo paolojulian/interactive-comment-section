@@ -244,7 +244,7 @@ export default function Comment({
 
       <AddReply isLoading={addReplyApi.isLoading} onReply={onReplyAsync} willShow={showAddReply}></AddReply>
 
-      {replies.map(({ id: replyId, createdAt, content, replyingTo, score, voted: replyVoted, user }) => (
+      {replies.map(({ _id: replyId, createdAt, content, replyingTo, score, voted: replyVoted, user }, i) => (
         <div className="flex w-full" key={replyId}>
           {/* Vertical Line */}
           <div className="ml-0 md:ml-10">
@@ -260,9 +260,9 @@ export default function Comment({
               content={content}
               currentUser={currentUser}
               score={score}
-              username={user.username}
-              userImg={user.image.webp}
-              userId={user.id}
+              username={user?.username}
+              userImg={user?.image?.png}
+              userId={user?.id}
               voted={replyVoted}
               replyingTo={replyingTo}
             />

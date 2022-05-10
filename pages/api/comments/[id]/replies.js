@@ -38,6 +38,12 @@ const handler = async (req, res) => {
   const commentId = Number(req.query.id);
   const comment = db.comments.find((comment) => comment.id === commentId);
 
+  switch (req.method) {
+    case 'POST':
+      break;
+    default:
+      return res.status(404).send();
+  }
   if (req.method === 'POST') {
     const reply = onAdd(comment, req.body);
 
