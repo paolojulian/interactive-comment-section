@@ -34,14 +34,22 @@ const ReplyService = (() => {
   };
 
   /**
-   * Delete a comment
+   * Delete a reply
    *
    * @param { String } id
    * @returns { Promise<ResponseHandler> }
    */
-  const deleteComment = async (id) => {
+  const deleteReply = async (id, commentId) => {
     try {
-      const response = await Comment.deleteOne({ _id: id });
+      const updateComment = await Comment.updateOne(
+        { _id: commentId },
+        {
+          $pullAll: {
+            replies: [id],
+          },
+        }
+      );
+      const response = await Reply.deleteOne({ _id: id });
       if (!response.acknowledged) {
         throw 'Server error';
       }
@@ -85,7 +93,7 @@ const ReplyService = (() => {
 
   return {
     addReply,
-    deleteComment,
+    deleteReply,
     fetchComments,
     updateComment,
   };

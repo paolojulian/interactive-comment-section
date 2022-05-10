@@ -253,7 +253,7 @@ export default function Comment({
           <div className="ml-4 md:ml-8 flex-1">
             <Comment
               key={replyId}
-              id={replyId}
+              id={id}
               isReply={true}
               replyId={replyId}
               createdAt={createdAt}

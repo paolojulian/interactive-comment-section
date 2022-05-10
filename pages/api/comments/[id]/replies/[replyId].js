@@ -1,4 +1,5 @@
 import { saveJsonFile } from '../../../../../helpers/api/saveJsonFile';
+import ReplyService from '../../../../../helpers/api/services/ReplyService';
 
 let db = require('/data/db.json');
 
@@ -41,10 +42,21 @@ const onVote = (replyToUpdate, voted) => {
  * @param {import('next').NextApiResponse} res
  */
 const handler = async (req, res) => {
-  const commentId = Number(req.query.id);
-  const comment = db.comments.find((comment) => comment.id === commentId);
+  const commentId = req.query.id;
+  const id = req.query.replyId;
 
-  const id = Number(req.query.replyId);
+  switch (req.method) {
+    case 'DELETE':
+      const deleteReplyResponse = await ReplyService.deleteReply(id, commentId);
+
+      if (!deleteReplyResponse.ok) {
+        return res.status(500).json(deleteReplyResponse.data);
+      }
+
+      return res.status(204).send();
+    default:
+      return res.status(404).send();
+  }
 
   if (req.method === 'DELETE') {
     comment.replies.forEach((reply, i) => {

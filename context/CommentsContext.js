@@ -46,7 +46,7 @@ const CommentsProvider = ({ initialData, children }) => {
 
     const commentToUpdate = comments.find((comment) => comment._id === id);
     if (commentToUpdate && response.data.content) {
-      commentToUpdate.content = response.data.content
+      commentToUpdate.content = response.data.content;
     }
 
     return response;
@@ -66,9 +66,9 @@ const CommentsProvider = ({ initialData, children }) => {
     const response = await apiClient.delete(`/api/comments/${id}/replies/${replyId}`);
     if (!response.ok) return response;
 
-    const commentToUpdate = comments.find((comment) => comment.id === id);
+    const commentToUpdate = comments.find((comment) => comment._id === id);
     commentToUpdate.replies.forEach((reply, i) => {
-      if (reply.id === replyId) {
+      if (reply._id === replyId) {
         commentToUpdate.replies.splice(i, 1);
       }
     });
