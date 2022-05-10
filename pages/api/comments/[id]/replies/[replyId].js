@@ -54,19 +54,18 @@ const handler = async (req, res) => {
       }
 
       return res.status(204).send();
+    
+    case 'PUT':
+      if (req.body.voted !== undefined) {
+        // TODO: Handle on vote
+        return res.status(404).send();
+      }
+
+      const updateReplyResponse = await ReplyService.updateReply(id, req.body);
+
+      return res.status(200).json(updateReplyResponse.data);
     default:
       return res.status(404).send();
-  }
-
-  if (req.method === 'DELETE') {
-    comment.replies.forEach((reply, i) => {
-      if (reply.id === id) {
-        comment.replies.splice(i, 1);
-      }
-    });
-    saveJsonFile(db);
-
-    return res.status(204).send();
   }
 
   if (req.method === 'PUT') {

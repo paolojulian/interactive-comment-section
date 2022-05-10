@@ -9,7 +9,7 @@ const ReplyService = (() => {
    *
    * @returns { Promise<ResponseHandler> }
    */
-  const addReply = async (commentId, { content }) => {
+  const addReply = async (commentId, { content, replyingTo }) => {
     const currentUser = await User.findCurrentUser();
     try {
       const comment = await Comment.findOne({ _id: commentId });
@@ -18,7 +18,7 @@ const ReplyService = (() => {
       }
       const createdReply = await Reply.create({
         content,
-        replyingTo: comment.user,
+        replyingTo: replyingTo,
         user: currentUser._id,
       });
       const populatedReply = await Reply.findOne({ _id: createdReply._id })
@@ -28,7 +28,6 @@ const ReplyService = (() => {
       comment.save();
       return new ResponseHandler(true, populatedReply);
     } catch (error) {
-      console.log(error);
       return new ResponseHandler(false, error);
     }
   };
@@ -41,7 +40,7 @@ const ReplyService = (() => {
    */
   const deleteReply = async (id, commentId) => {
     try {
-      const updateComment = await Comment.updateOne(
+      await Comment.updateOne(
         { _id: commentId },
         {
           $pullAll: {
@@ -74,18 +73,17 @@ const ReplyService = (() => {
   };
 
   /**
-   * Update a comment
+   * Update a reply
    *
    * @returns { Promise<ResponseHandler> }
    */
-  const updateComment = async (id, data) => {
-    const filter = { _id: id };
+  const updateReply = async (id, { content }) => {
     const updateData = {
-      content: data.content,
+      content,
     };
     try {
-      const updatedComment = await Comment.findOneAndUpdate(filter, updateData, { new: true });
-      return new ResponseHandler(true, updatedComment);
+      const updatedReply = await Reply.findOneAndUpdate({ _id: id }, updateData, { new: true });
+      return new ResponseHandler(true, updatedReply);
     } catch (error) {
       return new ResponseHandler(false, error);
     }
@@ -95,7 +93,7 @@ const ReplyService = (() => {
     addReply,
     deleteReply,
     fetchComments,
-    updateComment,
+    updateReply,
   };
 })();
 

@@ -122,10 +122,7 @@ export default function Comment({
       }
 
       if (isReply) {
-        const response = await voteReplyApi.request(id, replyId, { voted: payload });
-        if (response.ok) {
-        }
-        return;
+        return await voteReplyApi.request(id, replyId, { voted: payload });
       }
 
       const response = await voteApi.request(id, { voted: payload });
@@ -216,8 +213,12 @@ export default function Comment({
           </div>
           {/* Description */}
           <div className="text-grayBlue w-full">
-            {replyingTo && !showEdit && <span className="text-darkBlue font-medium mr-1">@{replyingTo.username}</span>}
-            <p className='whitespace-pre-wrap'>{!showEdit && content}</p>
+            <p className="whitespace-pre-wrap">
+              {replyingTo && !showEdit && (
+                <span className="text-darkBlue font-medium mr-1">@{replyingTo.username}</span>
+              )}
+              {!showEdit && content}
+            </p>
             {showEdit && (
               <TextArea
                 rows="4"

@@ -80,8 +80,8 @@ const CommentsProvider = ({ initialData, children }) => {
     const response = await apiClient.put(`/api/comments/${id}/replies/${replyId}`, payload);
     if (!response.ok) return response;
 
-    const commentToUpdate = comments.find((comment) => comment.id === id);
-    const replyToUpdate = commentToUpdate.replies.find((reply) => reply.id === replyId);
+    const commentToUpdate = comments.find((comment) => comment._id === id);
+    const replyToUpdate = commentToUpdate.replies.find((reply) => reply._id === replyId);
     replyToUpdate.content = payload.content;
 
     return response;
