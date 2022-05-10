@@ -48,7 +48,8 @@ const handler = async (req, res) => {
 
     case 'PUT':
       if (req.body.voted !== undefined) {
-        return onVote(req, res);
+        const voteComment = await CommentService.voteComment(id, req.body);
+        return res.status(voteComment.ok ? 200 : 500).json(voteComment.data);
       }
       const updateComment = await CommentService.updateComment(id, req.body);
       return res.status(updateComment.ok ? 200 : 500).json(updateComment.data);

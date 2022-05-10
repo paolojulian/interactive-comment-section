@@ -40,6 +40,34 @@ const CommentService = (() => {
     }
   };
 
+  const voteComment = async (id, { voted }) => {
+    const commentToUpdate = await Comment.findOne({ _id: id });
+    switch (voted) {
+      case 1:
+        if (commentToUpdate.voted >= 1) {
+          return new ResponseHandler(false, { message: 'Cannot upvote anymore'});
+        }
+        break;
+      case -1:
+        if (commentToUpdate.voted <= -1) {
+          return new ResponseHandler(false, { message: 'Cannot downvote anymore'});
+        }
+        break; default:
+        throw 'Invalid parameters';
+    }
+
+    const updateData = {
+      voted: commentToUpdate.voted + voted,
+      score: commentToUpdate.score + voted
+    };
+    try {
+      const updatedComment = await Comment.findOneAndUpdate({ _id: id }, updateData, { new: true });
+      return new ResponseHandler(true, updatedComment);
+    } catch (error) {
+      return new ResponseHandler(false, error);
+    }
+  };
+
   /**
    * Fetch the list of comments
    *
@@ -92,6 +120,7 @@ const CommentService = (() => {
     deleteComment,
     fetchComments,
     updateComment,
+    voteComment,
   };
 })();
 

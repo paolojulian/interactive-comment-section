@@ -88,7 +88,7 @@ const CommentsProvider = ({ initialData, children }) => {
   });
 
   const voteApi = useApi(async (id, payload) => {
-    const commentToUpdate = comments.find((comment) => comment.id === id);
+    const commentToUpdate = comments.find((comment) => comment._id === id);
     const votedTemp = commentToUpdate.voted;
     commentToUpdate.score += payload.voted;
     commentToUpdate.voted += payload.voted;
@@ -97,14 +97,17 @@ const CommentsProvider = ({ initialData, children }) => {
     if (!response.ok) {
       commentToUpdate.score -= payload.voted;
       commentToUpdate.voted = votedTemp;
+      return response;
     }
+    commentToUpdate.score = response.data.score;
+    commentToUpdate.voted = response.data.voted;
 
     return response;
   });
 
   const voteReplyApi = useApi(async (id, replyId, payload) => {
-    const commentToUpdate = comments.find((comment) => comment.id === id);
-    const replyToUpdate = commentToUpdate.replies.find((reply) => reply.id === replyId);
+    const commentToUpdate = comments.find((comment) => comment._id === id);
+    const replyToUpdate = commentToUpdate.replies.find((reply) => reply._id === replyId);
     const votedTemp = replyToUpdate.voted;
     replyToUpdate.score += payload.voted;
     replyToUpdate.voted += payload.voted;
@@ -113,7 +116,11 @@ const CommentsProvider = ({ initialData, children }) => {
     if (!response.ok) {
       replyToUpdate.score -= payload.voted;
       replyToUpdate.voted = votedTemp;
+      return response;
     }
+
+    replyToUpdate.score = response.data.score;
+    replyToUpdate.voted = response.data.voted;
 
     return response;
   });

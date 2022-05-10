@@ -58,15 +58,29 @@ const ReplyService = (() => {
     }
   };
 
-  /**
-   * Fetch the list of comments
-   *
-   * @returns { Promise<ResponseHandler> }
-   */
-  const fetchComments = async () => {
+  const voteReply = async (id, { voted }) => {
+    const replyToUpdate = await Reply.findOne({ _id: id });
+    switch (voted) {
+      case 1:
+        if (replyToUpdate.voted >= 1) {
+          return new ResponseHandler(false, { message: 'Cannot upvote anymore'});
+        }
+        break;
+      case -1:
+        if (replyToUpdate.voted <= -1) {
+          return new ResponseHandler(false, { message: 'Cannot downvote anymore'});
+        }
+        break; default:
+        throw 'Invalid parameters';
+    }
+
+    const updateData = {
+      voted: replyToUpdate.voted + voted,
+      score: replyToUpdate.score + voted
+    };
     try {
-      const comments = await Comment.find().limit(20).populate('user', ['username', 'image']);
-      return new ResponseHandler(true, comments);
+      const updatedComment = await Reply.findOneAndUpdate({ _id: id }, updateData, { new: true });
+      return new ResponseHandler(true, updatedComment);
     } catch (error) {
       return new ResponseHandler(false, error);
     }
@@ -92,8 +106,8 @@ const ReplyService = (() => {
   return {
     addReply,
     deleteReply,
-    fetchComments,
     updateReply,
+    voteReply
   };
 })();
 
