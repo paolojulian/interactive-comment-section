@@ -252,17 +252,17 @@ export default function Comment({
           </div>
           <div className="ml-4 md:ml-8 flex-1">
             <Comment
-              key={id}
-              id={id}
+              key={replyId}
+              id={replyId}
               isReply={true}
               replyId={replyId}
               createdAt={createdAt}
               content={content}
               currentUser={currentUser}
               score={score}
-              username={user?.username}
-              userImg={user?.image?.png}
-              userId={user?.id}
+              username={user.username}
+              userImg={user.image.png}
+              userId={user._id}
               voted={replyVoted}
               replyingTo={replyingTo}
             />

@@ -12,7 +12,9 @@ function AddComment({ sendText = 'send', onAddComment, isLoading, className, ...
 
   const onSubmit = async () => {
     if (onAddComment) {
-      return onAddComment(comment);
+      await onAddComment(comment);
+      setComment('');
+      return;
     }
 
     const response = await addCommentApi.request(comment);

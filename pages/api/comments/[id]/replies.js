@@ -1,6 +1,7 @@
 import { NextApiRequest } from 'next';
 import { generateAutoIncrementId } from '../../../../helpers/api/general';
 import { saveJsonFile } from '../../../../helpers/api/saveJsonFile';
+import ReplyService from '../../../../helpers/api/services/ReplyService';
 
 let db = require('/data/db.json');
 
@@ -35,12 +36,13 @@ const onAdd = (comment, payload) => {
  * @param {*} res
  */
 const handler = async (req, res) => {
-  const commentId = Number(req.query.id);
-  const comment = db.comments.find((comment) => comment.id === commentId);
+  const commentId = req.query.id;
 
   switch (req.method) {
     case 'POST':
-      break;
+      const addReplyResponse = await ReplyService.addReply(commentId, req.body);
+
+      return res.status(addReplyResponse.ok ? 200 : 500).json(addReplyResponse.data);
     default:
       return res.status(404).send();
   }

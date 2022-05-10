@@ -1,23 +1,34 @@
 import Comment from '../models/Comment';
+import Reply from '../models/Reply';
 import User from '../models/User';
 import ResponseHandler from '../../response-handler';
 
-const CommentService = (() => {
+const ReplyService = (() => {
   /**
    * Add a reply
    *
    * @returns { Promise<ResponseHandler> }
    */
-  const addReply = async ({ content }) => {
+  const addReply = async (commentId, { content }) => {
     const currentUser = await User.findCurrentUser();
     try {
-      const createdUser = await Comment.create({
+      const comment = await Comment.findOne({ _id: commentId });
+      if (!comment) {
+        throw comment;
+      }
+      const createdReply = await Reply.create({
         content,
+        replyingTo: comment.user,
         user: currentUser._id,
       });
-      const populatedUser = await createdUser.populate('user', ['username', 'image']);
-      return new ResponseHandler(true, populatedUser);
+      const populatedReply = await Reply.findOne({ _id: createdReply._id })
+        .populate('user', ['username', 'image'])
+        .populate('replyingTo');
+      comment.replies.push(createdReply);
+      comment.save();
+      return new ResponseHandler(true, populatedReply);
     } catch (error) {
+      console.log(error);
       return new ResponseHandler(false, error);
     }
   };
@@ -73,11 +84,11 @@ const CommentService = (() => {
   };
 
   return {
-    addComment,
+    addReply,
     deleteComment,
     fetchComments,
     updateComment,
   };
 })();
 
-export default CommentService;
+export default ReplyService;

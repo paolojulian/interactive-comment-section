@@ -11,12 +11,12 @@ const CommentService = (() => {
   const addComment = async ({ content }) => {
     const currentUser = await User.findCurrentUser();
     try {
-      const createdUser = await Comment.create({
+      const createdComment = await Comment.create({
         content,
         user: currentUser._id,
       });
-      const populatedUser = await createdUser.populate('user', ['username', 'image']);
-      return new ResponseHandler(true, populatedUser);
+      const populatedComment = await createdComment.populate('user', ['username', 'image']);
+      return new ResponseHandler(true, populatedComment);
     } catch (error) {
       return new ResponseHandler(false, error);
     }
