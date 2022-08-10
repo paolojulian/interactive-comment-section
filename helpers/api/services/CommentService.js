@@ -45,20 +45,21 @@ const CommentService = (() => {
     switch (voted) {
       case 1:
         if (commentToUpdate.voted >= 1) {
-          return new ResponseHandler(false, { message: 'Cannot upvote anymore'});
+          return new ResponseHandler(false, { message: 'Cannot upvote anymore' });
         }
         break;
       case -1:
         if (commentToUpdate.voted <= -1) {
-          return new ResponseHandler(false, { message: 'Cannot downvote anymore'});
+          return new ResponseHandler(false, { message: 'Cannot downvote anymore' });
         }
-        break; default:
+        break;
+      default:
         throw 'Invalid parameters';
     }
 
     const updateData = {
       voted: commentToUpdate.voted + voted,
-      score: commentToUpdate.score + voted
+      score: commentToUpdate.score + voted,
     };
     try {
       const updatedComment = await Comment.findOneAndUpdate({ _id: id }, updateData, { new: true });
@@ -91,7 +92,9 @@ const CommentService = (() => {
             },
           ],
         });
-        console.log('Comments', comments);
+      comments.map(({ replies }) => {
+        console.log('Replies', replies);
+      });
       return new ResponseHandler(true, comments);
     } catch (error) {
       return new ResponseHandler(false, error);

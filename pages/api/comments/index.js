@@ -9,7 +9,6 @@ const handler = async (req, res) => {
   switch (method) {
     case 'GET':
       const fetchCommentsResponse = await CommentService.fetchComments();
-      console.log('test');
 
       return res
         .setHeader('Cache-Control', 'no-store')
