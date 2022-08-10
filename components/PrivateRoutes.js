@@ -1,8 +1,7 @@
 import React from 'react';
 import UserProvider from '../context/UserContext';
 
-function PrivateRoutes(props, pageProps) {
-  console.log(pageProps);
+function PrivateRoutes(props) {
   return (
     <UserProvider>
       {props.children}

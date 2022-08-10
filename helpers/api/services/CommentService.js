@@ -92,9 +92,6 @@ const CommentService = (() => {
             },
           ],
         });
-      comments.map(({ replies }) => {
-        console.log('Replies', replies);
-      });
       return new ResponseHandler(true, comments);
     } catch (error) {
       return new ResponseHandler(false, error);
