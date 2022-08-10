@@ -245,31 +245,36 @@ export default function Comment({
 
       <AddReply isLoading={addReplyApi.isLoading} onReply={onReplyAsync} willShow={showAddReply}></AddReply>
 
-      {replies.map(({ _id: replyId, createdAt, content, replyingTo, score, voted: replyVoted, user }, i) => (
-        <div className="flex w-full" key={replyId}>
-          {/* Vertical Line */}
-          <div className="ml-0 md:ml-10">
-            <div className="border-l-2 rounded-lg border-gray-200 h-full"></div>
+      {replies.map(({ _id: replyId, createdAt, content, replyingTo, score, voted: replyVoted, user }, i) => {
+        if (!user) {
+          return null;
+        }
+        return (
+          <div className="flex w-full" key={replyId}>
+            {/* Vertical Line */}
+            <div className="ml-0 md:ml-10">
+              <div className="border-l-2 rounded-lg border-gray-200 h-full"></div>
+            </div>
+            <div className="ml-4 md:ml-8 flex-1">
+              <Comment
+                key={replyId}
+                id={id}
+                isReply={true}
+                replyId={replyId}
+                createdAt={createdAt}
+                content={content}
+                currentUser={currentUser}
+                score={score}
+                username={user.username}
+                userImg={user.image.png}
+                userId={user._id}
+                voted={replyVoted}
+                replyingTo={replyingTo}
+              />
+            </div>
           </div>
-          <div className="ml-4 md:ml-8 flex-1">
-            <Comment
-              key={replyId}
-              id={id}
-              isReply={true}
-              replyId={replyId}
-              createdAt={createdAt}
-              content={content}
-              currentUser={currentUser}
-              score={score}
-              username={user.username}
-              userImg={user.image.png}
-              userId={user._id}
-              voted={replyVoted}
-              replyingTo={replyingTo}
-            />
-          </div>
-        </div>
-      ))}
+        );
+      })}
 
       <DeleteComment
         isLoading={isReply ? deleteReplyApi.isLoading : deleteCommentApi.isLoading}
