@@ -1,18 +1,18 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import AddReply from './AddReply';
+import { useCommentsContext } from '../../context/CommentsContext';
+import { formatUTCToLocalTime } from '../../helpers/date';
+import Button from '../Button';
 import Card from '../Card';
-import DeleteComment from './DeleteComment';
 import DeleteIcon from '../Icons/DeleteIcon';
 import EditIcon from '../Icons/EditIcon';
 import MinusIcon from '../Icons/MinusIcon';
 import PlusIcon from '../Icons/PlusIcon';
-import ProfilePicture from '../ProfilePicture';
 import ReplyIcon from '../Icons/ReplyIcon';
+import ProfilePicture from '../ProfilePicture';
 import TextArea from '../TextArea';
-import Button from '../Button';
-import { useCommentsContext } from '../../context/CommentsContext';
-import { formatUTCToLocalTime } from '../../helpers/date';
+import AddReply from './AddReply';
+import DeleteComment from './DeleteComment';
 
 const voteTypes = {
   upvote: 1,

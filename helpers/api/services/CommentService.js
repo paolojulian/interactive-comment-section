@@ -1,6 +1,6 @@
+import ResponseHandler from '../../../helpers/response-handler';
 import Comment from '../models/Comment';
 import User from '../models/User';
-import ResponseHandler from '../../../helpers/response-handler';
 
 const CommentService = (() => {
   /**

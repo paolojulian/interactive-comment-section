@@ -21,7 +21,6 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ comments }) {
-
   return (
     <div className="flex flex-col pt-0 md:pt-10">
       <Head>

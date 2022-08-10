@@ -1,9 +1,9 @@
 import React from 'react';
 
+import { useCommentsContext } from '../../context/CommentsContext';
+import { useUserContext } from '../../context/UserContext';
 import AddComment from './AddComment';
 import Comment from './Comment';
-import { useUserContext } from '../../context/UserContext';
-import { useCommentsContext } from '../../context/CommentsContext';
 
 export default function Comments() {
   const userContext = useUserContext();
@@ -21,9 +21,9 @@ export default function Comments() {
             currentUser={userContext.user}
             replies={replies}
             score={score}
-            userId={user._id}
-            username={user.username || ''}
-            userImg={user.image?.png}
+            userId={user?._id}
+            username={user?.username || ''}
+            userImg={user?.image?.png}
             voted={voted}
           />
         ))}
