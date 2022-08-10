@@ -29,7 +29,11 @@ export const connectToDatabase = async () => {
     cached.promise = mongoose.connect(uri, options).then((mongoose) => mongoose);
   }
 
-  cached.conn = await cached.promise;
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    console.log('Cannot connect to the database.');
+  }
   return cached.conn;
 };
 
