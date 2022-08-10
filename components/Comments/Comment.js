@@ -246,9 +246,6 @@ export default function Comment({
       <AddReply isLoading={addReplyApi.isLoading} onReply={onReplyAsync} willShow={showAddReply}></AddReply>
 
       {replies.map(({ _id: replyId, createdAt, content, replyingTo, score, voted: replyVoted, user }, i) => {
-        if (!user) {
-          return null;
-        }
         return (
           <div className="flex w-full" key={replyId}>
             {/* Vertical Line */}

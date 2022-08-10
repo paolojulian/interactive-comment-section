@@ -9,8 +9,12 @@ const handler = async (req, res) => {
   switch (method) {
     case 'GET':
       const fetchCommentsResponse = await CommentService.fetchComments();
+      console.log('test');
 
-      return res.status(fetchCommentsResponse.ok ? 200 : 500).json(fetchCommentsResponse.data);
+      return res
+        .setHeader('Cache-Control', 'no-store')
+        .status(fetchCommentsResponse.ok ? 200 : 500)
+        .json(fetchCommentsResponse.data);
 
     case 'POST':
       const addCommentResponse = await CommentService.addComment(req.body);

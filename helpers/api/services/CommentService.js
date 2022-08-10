@@ -91,6 +91,7 @@ const CommentService = (() => {
             },
           ],
         });
+        console.log('Comments', comments);
       return new ResponseHandler(true, comments);
     } catch (error) {
       return new ResponseHandler(false, error);
